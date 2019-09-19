@@ -1,8 +1,7 @@
 import * as grpc from 'grpc';
+import * as Hubspot from 'hubspot';
 import { Field } from '../core/base-step';
 import { FieldDefinition } from '../proto/cog_pb';
-import * as Hubspot from 'hubspot';
-import { rejects } from 'assert';
 
 export class ClientWrapper {
   public static expectedAuthFields: Field[] = [{
