@@ -5,7 +5,7 @@ import { Step, FieldDefinition, StepDefinition } from '../proto/cog_pb';
 
 export class CreateOrUpdateContactStep extends BaseStep implements StepInterface {
 
-  protected stepName: string = 'Create or update a hubspot contact';
+  protected stepName: string = 'Create or update a HubSpot contact';
   protected stepExpression: string = 'create or update a hubspot contact';
   protected stepType: StepDefinition.Type = StepDefinition.Type.ACTION;
 
@@ -32,14 +32,14 @@ export class CreateOrUpdateContactStep extends BaseStep implements StepInterface
       const data = await this.client.createOrUpdateContact(email, contact);
 
       if (data) {
-        return this.pass('Successfully created or updated contact %s', [
+        return this.pass('Successfully created or updated HubSpot contact %s', [
           email,
         ]);
       } else {
-        return this.fail('Unable to create or update contact');
+        return this.fail('Unable to create or update HubSpot contact');
       }
     } catch (e) {
-      return this.error('There was an error creating or updating contacts in HubSpot: %s', [
+      return this.error('There was an error creating or updating the contact in HubSpot: %s', [
         e.toString(),
       ]);
     }

@@ -1,5 +1,7 @@
 # HubSpot Cog
 
+[![CircleCI](https://circleci.com/gh/run-crank/cog-hubspot/tree/master.svg?style=svg)](https://circleci.com/gh/run-crank/cog-hubspot/tree/master)
+
 This is a [Crank][what-is-crank] Cog for HubSpot, providing
 steps and assertions for you to validate the state and behavior of your
 HubSpot instance.
@@ -27,7 +29,7 @@ Note: You can always re-authenticate later.
 <!-- authenticationDetails -->
 You will be asked for the following authentication details on installation.
 
-- **userAgent**: User Agent String
+- **apiKey**: API Key
 
 ```shell-session
 # Re-authenticate by running this
@@ -41,7 +43,28 @@ Scenario files.
 
 <!-- run `crank cog:readme automatoninc/hubspot` to update -->
 <!-- stepDetails -->
-This Cog does not have any steps defined yet!
+<h4 id="CreateOrUpdateContactStep">Create or update a HubSpot contact</h4>
+
+- **Expression**: `create or update a hubspot contact`
+- **Expected Data**:
+  - `contact`: A map of field names to field values
+- **Step ID**: `CreateOrUpdateContactStep`
+
+<h4 id="DeleteContactStep">Delete a HubSpot contact</h4>
+
+- **Expression**: `delete the (?<email>.+) hubspot contact`
+- **Expected Data**:
+  - `email`: Contact's email address
+- **Step ID**: `DeleteContactStep`
+
+<h4 id="ContactFieldEquals">Check a field on a HubSpot Contact</h4>
+
+- **Expression**: `the (?<field>[a-zA-Z0-9_-]+) field on hubspot contact (?<email>.+) should be (?<expectation>.+)`
+- **Expected Data**:
+  - `email`: Contact's email address
+  - `field`: Field name to check
+  - `expectation`: Expected field value
+- **Step ID**: `ContactFieldEquals`
 <!-- stepDetailsEnd -->
 
 ## Development and Contributing

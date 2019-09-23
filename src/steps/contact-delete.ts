@@ -5,7 +5,7 @@ import { Step, FieldDefinition, StepDefinition } from '../proto/cog_pb';
 
 export class DeleteContactStep extends BaseStep implements StepInterface {
 
-  protected stepName: string = 'Delete a hubspot contact';
+  protected stepName: string = 'Delete a HubSpot contact';
   protected stepExpression: string = 'delete the (?<email>.+) hubspot contact';
   protected stepType: StepDefinition.Type = StepDefinition.Type.ACTION;
 
@@ -23,16 +23,16 @@ export class DeleteContactStep extends BaseStep implements StepInterface {
       const data = await this.client.deleteContactByEmail(email);
 
       if (data.deleted) {
-        return this.pass('Successfully deleted contact %s', [
+        return this.pass('Successfully deleted HubSpot contact %s', [
           email,
         ]);
       } else {
-        return this.fail('Unable to delete contact. Reason: %s', [
+        return this.fail('Unable to delete HubSpot contact: %s', [
           data.reason,
         ]);
       }
     } catch (e) {
-      return this.error('There was an error delete contact in HubSpot: %s', [
+      return this.error('There was an error deleting the HubSpot contact: %s', [
         e.toString(),
       ]);
     }

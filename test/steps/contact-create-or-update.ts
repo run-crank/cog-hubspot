@@ -26,7 +26,7 @@ describe('CreateOrUpdateContactStep', () => {
     it('should return expected step metadata', () => {
       const stepDef: StepDefinition = stepUnderTest.getDefinition();
       expect(stepDef.getStepId()).to.equal('CreateOrUpdateContactStep');
-      expect(stepDef.getName()).to.equal('Create or update a hubspot contact');
+      expect(stepDef.getName()).to.equal('Create or update a HubSpot contact');
       expect(stepDef.getExpression()).to.equal('create or update a hubspot contact');
       expect(stepDef.getType()).to.equal(StepDefinition.Type.ACTION);
     });

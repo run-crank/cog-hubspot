@@ -26,7 +26,7 @@ describe('ContactDeleteStep', () => {
     it('should return expected step metadata', () => {
       const stepDef: StepDefinition = stepUnderTest.getDefinition();
       expect(stepDef.getStepId()).to.equal('DeleteContactStep');
-      expect(stepDef.getName()).to.equal('Delete a hubspot contact');
+      expect(stepDef.getName()).to.equal('Delete a HubSpot contact');
       expect(stepDef.getExpression()).to.equal('delete the (?<email>.+) hubspot contact');
       expect(stepDef.getType()).to.equal(StepDefinition.Type.ACTION);
     });
