@@ -5,7 +5,7 @@ import { Step, FieldDefinition, StepDefinition } from '../proto/cog_pb';
 
 export class CreateOrUpdateContactStep extends BaseStep implements StepInterface {
 
-  protected stepName: string = 'Create or update a hubspot contact';
+  protected stepName: string = 'Create or update a HubSpot contact';
   protected stepExpression: string = 'create or update a hubspot contact';
   protected stepType: StepDefinition.Type = StepDefinition.Type.ACTION;
 

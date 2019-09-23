@@ -5,7 +5,7 @@ import { Step, FieldDefinition, StepDefinition } from '../proto/cog_pb';
 
 export class DeleteContactStep extends BaseStep implements StepInterface {
 
-  protected stepName: string = 'Delete a hubspot contact';
+  protected stepName: string = 'Delete a HubSpot contact';
   protected stepExpression: string = 'delete the (?<email>.+) hubspot contact';
   protected stepType: StepDefinition.Type = StepDefinition.Type.ACTION;
 
