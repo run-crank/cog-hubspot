@@ -33,7 +33,7 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
       const contact = await this.client.getContactByEmail(email);
 
       if (!contact.properties[field]) {
-        return this.error('Expected field %s was invalid.', [
+        return this.error("Couldn't check field %s on HubSpot contact: field doesn't exist.", [
           field,
         ]);
       }
