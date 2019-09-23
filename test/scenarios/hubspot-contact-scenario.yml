@@ -1,0 +1,13 @@
+scenario: HubSpot Scenario
+description: This tests the creation and deletion of a hubspot contact
+
+steps:
+- step: create or update a hubspot contact
+  data:
+    contact:
+        email: hubspot@sample.com
+        lastname: Doe
+        company: Sample Company
+- step: the company field on hubspot contact hubspot@sample.com should be Sample Company
+- step: the lastname field on hubspot contact hubspot@sample.com should be Doe
+- step: delete the hubspot@sample.com hubspot contact
