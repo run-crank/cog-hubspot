@@ -8,6 +8,7 @@ steps:
         email: hubspot@sample.com
         lastname: Doe
         company: Sample Company
+- step: the email field on hubspot contact hubspot@sample.com should be hubspot@sample.com
 - step: the company field on hubspot contact hubspot@sample.com should be Sample Company
 - step: the lastname field on hubspot contact hubspot@sample.com should be Doe
 - step: delete the hubspot@sample.com hubspot contact

@@ -48,7 +48,7 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
         return this.fail('Expected %s to be %s, but it was actually %s.', [
           field,
           expectation,
-          contact.properties[field],
+          contact.properties[field].value,
         ]);
       }
     } catch (e) {
