@@ -121,8 +121,8 @@ describe('ContactFieldEquals', () => {
         }));
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
           properties: {
-            email: expectedEmail,
-            lastname: expectedLastname,
+            email: { value: expectedEmail },
+            lastname: { value: expectedLastname },
           },
         }));
       });
