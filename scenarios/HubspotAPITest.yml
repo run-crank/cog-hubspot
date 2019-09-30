@@ -1,0 +1,15 @@
+scenario: Hubspot API Test
+description: This test the creation and validation of field in Hubspot.
+
+steps:
+- step: create or update a hubspot contact
+  data:
+    contact:
+        email: jakehs@ys.com
+        firstName: jake
+        lastName: lozan
+        company: HS Corp
+- waitFor: 60
+  step: Validate that the email field on hubspot contact jakehs@ys.com should be jakehs@ys.com
+- step: Validate that the firstname field on Hubspot contact jakehs@ys.com should be jake
+- step: Delete the jakehs@ys.com Hubspot contact.
