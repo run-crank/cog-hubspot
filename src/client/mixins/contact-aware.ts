@@ -1,6 +1,6 @@
 import * as hubspot from 'hubspot';
 
-export class ContactAware {
+export class ContactAwareMixin {
   client: hubspot.default;
 
   public async getContactByEmail(email: string): Promise<Object> {
