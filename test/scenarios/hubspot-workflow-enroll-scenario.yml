@@ -1,0 +1,13 @@
+scenario: Enroll in Workflow UAT
+description: Proves that the Enroll a HubSpot Contact into a Workflow step is working
+
+steps:
+- step: Given I create or update a HubSpot Contact
+  data:
+    contact:
+      email: test@automatoninc.com
+      lifecyclestage: lead
+- step: When I enroll the test@automatoninc.com HubSpot Contact into workflow MQL and Email
+- step: Then the lifecyclestage field on HubSpot Contact test@automatoninc.com should be marketingqualifiedlead
+  failAfter: 60
+- step: Finally, delete the test@automatoninc.com HubSpot Contact

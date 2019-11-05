@@ -2,7 +2,7 @@ import * as grpc from 'grpc';
 import * as Hubspot from 'hubspot';
 import { Field } from '../core/base-step';
 import { FieldDefinition } from '../proto/cog_pb';
-import { ContactAwareMixin } from './mixins/contact-aware';
+import { ContactAwareMixin, WorkflowAwareMixin } from './mixins';
 
 class ClientWrapper {
   public static expectedAuthFields: Field[] = [{
@@ -20,9 +20,9 @@ class ClientWrapper {
   }
 }
 
-interface ClientWrapper extends ContactAwareMixin {}
+interface ClientWrapper extends ContactAwareMixin, WorkflowAwareMixin {}
 
-applyMixins(ClientWrapper, [ContactAwareMixin]);
+applyMixins(ClientWrapper, [ContactAwareMixin, WorkflowAwareMixin]);
 
 function applyMixins(derivedCtor: any, baseCtors: any[]) {
   baseCtors.forEach((baseCtor) => {
