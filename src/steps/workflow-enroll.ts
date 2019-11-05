@@ -39,9 +39,7 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
         workflowId = workflows[0].id;
       }
 
-      const data = await this.client.enrollContactToWorkflow(workflowId, email);
-
-      console.log('On pass', data);
+      await this.client.enrollContactToWorkflow(workflowId, email);
 
       return this.pass('The contact %s was successfully enrolled to workflow %s', [
         email,
