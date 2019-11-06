@@ -1,7 +1,9 @@
 export class WorkflowAwareMixin {
+  clientReady: Promise<boolean>;
   client: any; //// cant use the @types here. The workflows property was not exposed.
 
   async enrollContactToWorkflow(workflow, email) {
+    await this.clientReady;
     return new Promise((resolve, reject) => {
       this.client.workflows.enroll(workflow, email).then(resolve)
         .catch((err) => {
@@ -18,6 +20,7 @@ export class WorkflowAwareMixin {
   }
 
   async findWorkflowByName(name) {
+    await this.clientReady;
     return new Promise((resolve, reject) => {
       this.client.workflows.getAll().then((response) => {
         resolve(response.workflows.filter(f => f.name === name));
