@@ -9,7 +9,7 @@ import { Step } from '../../src/steps/workflow-contact-enrolled';
 
 chai.use(sinonChai);
 
-describe('ContactDeleteStep', () => {
+describe('ContactEnrolledToWorkflowStep', () => {
   const expect = chai.expect;
   let protoStep: ProtoStep;
   let stepUnderTest: Step;
@@ -51,7 +51,13 @@ describe('ContactDeleteStep', () => {
   describe('Execute Step', () => {
     describe('Contact is not enrolled', () => {
       beforeEach(() => {
-        clientWrapperStub.currentContactWorkflows.returns(Promise.resolve([]));
+        clientWrapperStub.getContactByEmail.returns(Promise.resolve({
+          properties: { hs_object_id: { value: 1 } },
+        }));
+        clientWrapperStub.currentContactWorkflows.returns(Promise.resolve([{
+          id: 321,
+          name: 'Unique Workflow',
+        }]));
         protoStep.setData(Struct.fromJavaScript({
           workflow: 'Email Workfloww',
           email: 'test@automatoninc.com',
@@ -74,6 +80,10 @@ describe('ContactDeleteStep', () => {
           name: workflow,
         }]));
 
+        clientWrapperStub.getContactByEmail.returns(Promise.resolve({
+          properties: { hs_object_id: { value: 1 } },
+        }));
+
         protoStep.setData(Struct.fromJavaScript({
           workflow,
           email,
@@ -91,7 +101,7 @@ describe('ContactDeleteStep', () => {
       const email = 'test@automatoninc.com';
 
       beforeEach(() => {
-        clientWrapperStub.currentContactWorkflows.throws(new Error());
+        clientWrapperStub.getContactByEmail.throws();
         protoStep.setData(Struct.fromJavaScript({
           workflow,
           email,

@@ -9,7 +9,7 @@ import { Step } from '../../src/steps/workflow-enroll';
 
 chai.use(sinonChai);
 
-describe('ContactDeleteStep', () => {
+describe('EnrollContactToWorkflowStep', () => {
   const expect = chai.expect;
   let protoStep: ProtoStep;
   let stepUnderTest: Step;
