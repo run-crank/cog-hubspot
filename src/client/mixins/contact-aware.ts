@@ -1,9 +1,11 @@
 import * as hubspot from 'hubspot';
 
 export class ContactAwareMixin {
+  clientReady: Promise<boolean>;
   client: hubspot.default;
 
   public async getContactByEmail(email: string): Promise<Object> {
+    await this.clientReady;
     return new Promise((resolve, reject) => {
       this.client.contacts.getByEmail(email).then((result) => {
         resolve(result);
@@ -14,6 +16,7 @@ export class ContactAwareMixin {
   }
 
   public async createOrUpdateContact(email: string, contact: Object): Promise<Object> {
+    await this.clientReady;
     return new Promise((resolve, reject) => {
       this.client.contacts.createOrUpdate(email, contact).then((result) => {
         resolve(result);
@@ -24,6 +27,7 @@ export class ContactAwareMixin {
   }
 
   public async deleteContactByEmail(email: string): Promise<Object> {
+    await this.clientReady;
     return new Promise(async (resolve, reject) => {
       try {
         const contact = await this.client.contacts.getByEmail(email);
