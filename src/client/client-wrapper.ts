@@ -12,11 +12,32 @@ class ClientWrapper {
   }];
 
   client: Hubspot.default;
+  clientReady: Promise<boolean>;
 
   constructor(auth: grpc.Metadata, clientConstructor = Hubspot.default) {
-    this.client = new clientConstructor({
-      apiKey: auth.get('apiKey').toString(),
-    });
+    // Support OAuth-based authentication under the hood.
+    if (auth.get('refreshToken').toString()) {
+      this.client = new clientConstructor({
+        clientId: auth.get('clientId').toString(),
+        clientSecret: auth.get('clientSecret').toString(),
+        redirectUri: auth.get('redirectUri').toString(),
+        refreshToken: auth.get('refreshToken').toString(),
+      });
+      this.clientReady = new Promise((resolve, reject) => {
+        // @todo use normal method call once this issue is resolved:
+        // https://github.com/MadKudu/node-hubspot/issues/193
+        this.client['refreshAccessToken']()
+          .then(() => resolve(true))
+          .catch(e => reject(Error(`Authentication error, unable to refresh access token: ${e.toString()}`)));
+      });
+    } else {
+      // But fallback to API Key-based authentication, which is what is
+      // officially supported.
+      this.client = new clientConstructor({
+        apiKey: auth.get('apiKey').toString(),
+      });
+      this.clientReady = Promise.resolve(true);
+    }
   }
 }
 
