@@ -22,8 +22,7 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
   async executeStep(step: Step) {
     const stepData: any = step.getData().toJavaScript();
     const email: string = stepData.email;
-    const workflow = stepData.workflow;
-    let workflowId;
+    let workflow = stepData.workflow;
 
     try {
       if (isNaN(workflow)) {
@@ -36,10 +35,10 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
           ]);
         }
 
-        workflowId = workflows[0].id;
+        workflow = workflows[0].id;
       }
 
-      await this.client.enrollContactToWorkflow(workflowId, email);
+      await this.client.enrollContactToWorkflow(workflow, email);
 
       return this.pass('The contact %s was successfully enrolled to workflow %s', [
         email,
