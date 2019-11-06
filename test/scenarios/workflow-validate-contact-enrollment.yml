@@ -1,0 +1,12 @@
+scenario: Check Workflow Enrollment UAT
+description: Proves that the Check Workflow Enrollment of a HubSpot Contact step is working
+
+steps:
+- step: Given I create or update a HubSpot Contact
+  data:
+    contact:
+      email: test@automatoninc.com
+- step: When I enroll the test@automatoninc.com hubspot contact into workflow MQL and Email
+- step: Then the test@automatoninc.com hubspot contact should be enrolled in workflow 7267160
+- step: Then the test@automatoninc.com hubspot contact should be enrolled in workflow MQL and Email
+- step: Finally, delete the test@automatoninc.com HubSpot Contact

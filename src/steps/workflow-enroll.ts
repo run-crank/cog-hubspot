@@ -35,7 +35,9 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
           ]);
         }
 
-        workflow = workflows[0].id;
+        if (workflows[0]) {
+          workflow = workflows[0].id;
+        }
       }
 
       await this.client.enrollContactToWorkflow(workflow, email);

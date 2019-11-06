@@ -5,11 +5,11 @@ import * as sinonChai from 'sinon-chai';
 import 'mocha';
 
 import { Step as ProtoStep, StepDefinition, FieldDefinition, RunStepResponse } from '../../src/proto/cog_pb';
-import { Step } from '../../src/steps/workflow-enroll';
+import { Step } from '../../src/steps/workflow-contact-enrolled';
 
 chai.use(sinonChai);
 
-describe('EnrollContactToWorkflowStep', () => {
+describe('ContactEnrolledToWorkflowStep', () => {
   const expect = chai.expect;
   let protoStep: ProtoStep;
   let stepUnderTest: Step;
@@ -18,18 +18,18 @@ describe('EnrollContactToWorkflowStep', () => {
   beforeEach(() => {
     protoStep = new ProtoStep();
     clientWrapperStub = sinon.stub();
-    clientWrapperStub.findWorkflowByName = sinon.stub();
-    clientWrapperStub.enrollContactToWorkflow = sinon.stub();
+    clientWrapperStub.getContactByEmail = sinon.stub();
+    clientWrapperStub.currentContactWorkflows = sinon.stub();
     stepUnderTest = new Step(clientWrapperStub);
   });
 
   describe('Metadata', () => {
     it('should return expected step metadata', () => {
       const stepDef: StepDefinition = stepUnderTest.getDefinition();
-      expect(stepDef.getStepId()).to.equal('EnrollContactToWorkflowStep');
-      expect(stepDef.getName()).to.equal('Enroll a HubSpot Contact into a Workflow');
-      expect(stepDef.getExpression()).to.equal('enroll the (?<email>.+) hubspot contact into workflow (?<workflow>.+)');
-      expect(stepDef.getType()).to.equal(StepDefinition.Type.ACTION);
+      expect(stepDef.getStepId()).to.equal('ContactEnrolledToWorkflowStep');
+      expect(stepDef.getName()).to.equal('Check Workflow Enrollment of a HubSpot Contact');
+      expect(stepDef.getExpression()).to.equal('the (?<email>.+) hubspot contact should be enrolled in workflow (?<workflow>.+)');
+      expect(stepDef.getType()).to.equal(StepDefinition.Type.VALIDATION);
     });
 
     it('should return expected step fields', () => {
@@ -48,47 +48,45 @@ describe('EnrollContactToWorkflowStep', () => {
     });
   });
 
-  describe('ExecuteStep', () => {
-    describe('Multiple workflow matched by name', () => {
-      const workflowName = 'Email Workflow';
-
+  describe('Execute Step', () => {
+    describe('Contact is not enrolled', () => {
       beforeEach(() => {
-        clientWrapperStub.findWorkflowByName.returns(Promise.resolve([
-          {
-            id: 1,
-            name: workflowName,
-          }, {
-            id: 2,
-            name: workflowName,
-          },
-        ]));
-
+        clientWrapperStub.getContactByEmail.returns(Promise.resolve({
+          properties: { hs_object_id: { value: 1 } },
+        }));
+        clientWrapperStub.currentContactWorkflows.returns(Promise.resolve([{
+          id: 321,
+          name: 'Unique Workflow',
+        }]));
         protoStep.setData(Struct.fromJavaScript({
-          workflow: workflowName,
+          workflow: 'Email Workfloww',
           email: 'test@automatoninc.com',
         }));
       });
 
-      it('should respond with error', async () => {
-        const result = await stepUnderTest.executeStep(protoStep);
-        expect(result.getOutcome()).to.equal(RunStepResponse.Outcome.ERROR);
+      it('should respond with fail', async () => {
+        const response = await stepUnderTest.executeStep(protoStep);
+        expect(response.getOutcome()).to.equal(RunStepResponse.Outcome.FAILED);
       });
     });
 
-    describe('Contact successfully enrolled', () => {
+    describe('Contact is enrolled', () => {
       const workflow = 'Email Workflow';
+      const email = 'test@automatoninc.com';
+
       beforeEach(() => {
-        clientWrapperStub.findWorkflowByName.returns(Promise.resolve([
-          {
-            id: 1,
-            workflow: 'Email Workflow',
-          },
-        ]));
-        clientWrapperStub.enrollContactToWorkflow.returns(Promise.resolve());
+        clientWrapperStub.currentContactWorkflows.returns(Promise.resolve([{
+          id: 12345,
+          name: workflow,
+        }]));
+
+        clientWrapperStub.getContactByEmail.returns(Promise.resolve({
+          properties: { hs_object_id: { value: 1 } },
+        }));
 
         protoStep.setData(Struct.fromJavaScript({
           workflow,
-          email: 'test@automatoninc.com',
+          email,
         }));
       });
 
@@ -98,14 +96,15 @@ describe('EnrollContactToWorkflowStep', () => {
       });
     });
 
-    describe('Error occurred', () => {
-      const workflow = 12345;
-      beforeEach(() => {
-        clientWrapperStub.enrollContactToWorkflow.returns(Promise.reject(new Error()));
+    describe('Error was thrown', () => {
+      const workflow = 'Email Workflow';
+      const email = 'test@automatoninc.com';
 
+      beforeEach(() => {
+        clientWrapperStub.getContactByEmail.throws();
         protoStep.setData(Struct.fromJavaScript({
           workflow,
-          email: 'test@automatoninc.com',
+          email,
         }));
       });
 
