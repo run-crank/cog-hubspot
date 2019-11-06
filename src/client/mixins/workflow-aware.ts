@@ -27,4 +27,13 @@ export class WorkflowAwareMixin {
       }).catch(reject);
     });
   }
+
+  async currentContactWorkflows(contactId) {
+    await this.clientReady;
+    return new Promise((resolve, reject) => {
+      this.client.workflows.current(contactId).then((workflows) => {
+        resolve(workflows);
+      }).catch(reject);
+    });
+  }
 }
