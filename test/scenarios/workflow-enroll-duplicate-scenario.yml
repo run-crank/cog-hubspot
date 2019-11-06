@@ -1,0 +1,10 @@
+scenario: Enroll in Workflow by Name that Matches more than 1 Workflow UAT
+description: Proves that the enroll does not go through when Workflow Name matches more than 1 Workflow
+
+steps:
+- step: Given I create or update a HubSpot Contact
+  data:
+    contact:
+      email: test@automatoninc.com
+      lifecyclestage: lead
+- step: When I enroll the test@automatoninc.com HubSpot Contact into workflow Duplicate Workflow Test
