@@ -6,7 +6,7 @@ import { Step, FieldDefinition, StepDefinition } from '../proto/cog_pb';
 export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInterface {
 
   protected stepName: string = 'Check Workflow Enrollment of a HubSpot Contact';
-  protected stepExpression: string = 'the (?<email>.+) hubspot contact should be enrolled in workflow (?<workflow>.+)';
+  protected stepExpression: string = 'the (?<email>.+) hubspot contact should currently be enrolled in workflow (?<workflow>.+)';
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
 
   protected expectedFields: Field[] = [{
