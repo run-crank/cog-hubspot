@@ -7,6 +7,6 @@ steps:
     contact:
       email: test@automatoninc.com
 - step: When I enroll the test@automatoninc.com hubspot contact into workflow MQL and Email
-- step: Then the test@automatoninc.com hubspot contact should be enrolled in workflow 7267160
-- step: Then the test@automatoninc.com hubspot contact should be enrolled in workflow MQL and Email
+- step: Then the test@automatoninc.com hubspot contact should currently be enrolled in workflow 7267160
+- step: Then the test@automatoninc.com hubspot contact should currently be enrolled in workflow MQL and Email
 - step: Finally, delete the test@automatoninc.com HubSpot Contact
