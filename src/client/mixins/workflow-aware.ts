@@ -12,7 +12,7 @@ export class WorkflowAwareMixin {
             error.message = `The Contact ${email} or the Workflow ${workflow} does not exist`;
             reject(error);
           } else if (err.statusCode === 412) {
-            reject(err.message);
+            reject(err.error.message);
           }
           reject(err);
         });
@@ -24,7 +24,9 @@ export class WorkflowAwareMixin {
     return new Promise((resolve, reject) => {
       this.client.workflows.getAll().then((response) => {
         resolve(response.workflows.filter(f => f.name === name));
-      }).catch(reject);
+      }).catch((err) => {
+        reject(err.message);
+      });
     });
   }
 
@@ -33,7 +35,9 @@ export class WorkflowAwareMixin {
     return new Promise((resolve, reject) => {
       this.client.workflows.current(contactId).then((workflows) => {
         resolve(workflows);
-      }).catch(reject);
+      }).catch((err) => {
+        reject(err.message);
+      });
     });
   }
 }
