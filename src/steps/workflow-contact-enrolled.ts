@@ -5,7 +5,7 @@ import { Step, FieldDefinition, StepDefinition } from '../proto/cog_pb';
 
 export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInterface {
 
-  protected stepName: string = 'Check Workflow Enrollment of a HubSpot Contact';
+  protected stepName: string = 'Check Current Workflow Enrollment of a HubSpot Contact';
   protected stepExpression: string = 'the (?<email>.+) hubspot contact should currently be enrolled in workflow (?<workflow>.+)';
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
 
@@ -30,6 +30,13 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
 
       // tslint:disable-next-line:max-line-length
       const workflows = (await this.client.currentContactWorkflows(contact.properties['hs_object_id'].value)) || [];
+
+      if (workflows.length === 0) {
+        return this.fail('Contact %s is currently not enrolled to any Workflow', [
+          email,
+        ]);
+      }
+
       const property = isNaN(workflow) ? 'name' : 'id';
 
       // tslint:disable-next-line:triple-equals
