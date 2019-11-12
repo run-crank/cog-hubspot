@@ -44,7 +44,7 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
 
       return this.pass('The contact %s was successfully enrolled to workflow %s', [
         email,
-        workflow,
+        stepData.workflow,
       ]);
     } catch (e) {
       return this.error('There was an error enrolling the HubSpot contact to workflow: %s', [
