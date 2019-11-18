@@ -46,7 +46,7 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
         return this.fail('The Contact %s is not enrolled in the given workflow %s. Contact is enrolled in: %s', [
           email,
           workflow,
-          workflows.map(f => f.name).join(', '),
+          workflows.map(f => f[property]).join(', '),
         ]);
       }
 
