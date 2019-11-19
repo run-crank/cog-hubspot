@@ -27,9 +27,11 @@ Note: You can always re-authenticate later.
 ### Authentication
 <!-- run `crank cog:readme automatoninc/hubspot` to update -->
 <!-- authenticationDetails -->
-You will be asked for the following authentication details on installation.
+You will be asked for the following authentication details on installation. To avoid prompts in a CI/CD context, you can provide the same details as environment variables.
 
-- **apiKey**: API Key
+| Field | Install-Time Environment Variable | Description |
+| --- | --- | --- |
+| **apiKey** | `CRANK_AUTOMATONINC_HUBSPOT__APIKEY` | API Key |
 
 ```shell-session
 # Re-authenticate by running this
@@ -43,28 +45,13 @@ Scenario files.
 
 <!-- run `crank cog:readme automatoninc/hubspot` to update -->
 <!-- stepDetails -->
-<h4 id="CreateOrUpdateContactStep">Create or update a HubSpot contact</h4>
-
-- **Expression**: `create or update a hubspot contact`
-- **Expected Data**:
-  - `contact`: A map of field names to field values
-- **Step ID**: `CreateOrUpdateContactStep`
-
-<h4 id="DeleteContactStep">Delete a HubSpot contact</h4>
-
-- **Expression**: `delete the (?<email>.+) hubspot contact`
-- **Expected Data**:
-  - `email`: Contact's email address
-- **Step ID**: `DeleteContactStep`
-
-<h4 id="ContactFieldEquals">Check a field on a HubSpot Contact</h4>
-
-- **Expression**: `the (?<field>[a-zA-Z0-9_-]+) field on hubspot contact (?<email>.+) should be (?<expectation>.+)`
-- **Expected Data**:
-  - `email`: Contact's email address
-  - `field`: Field name to check
-  - `expectation`: Expected field value
-- **Step ID**: `ContactFieldEquals`
+| Name (ID) | Expression | Expected Data |
+| --- | --- | --- |
+| **Create or update a HubSpot contact**<br>(`CreateOrUpdateContactStep`) | `create or update a hubspot contact` | - `contact`: A map of field names to field values |
+| **Delete a HubSpot contact**<br>(`DeleteContactStep`) | `delete the (?<email>.+) hubspot contact` | - `email`: Contact's email address |
+| **Check a field on a HubSpot Contact**<br>(`ContactFieldEquals`) | `the (?<field>[a-zA-Z0-9_-]+) field on hubspot contact (?<email>.+) should be (?<expectation>.+)` | - `email`: Contact's email address <br><br>- `field`: Field name to check <br><br>- `expectation`: Expected field value |
+| **Check Current Workflow Enrollment of a HubSpot Contact**<br>(`ContactEnrolledToWorkflowStep`) | `the (?<email>.+) hubspot contact should currently be enrolled in workflow (?<workflow>.+)` | - `workflow`: Workflow's Name or ID <br><br>- `email`: Contact's email address |
+| **Enroll a HubSpot Contact into a Workflow**<br>(`EnrollContactToWorkflowStep`) | `enroll the (?<email>.+) hubspot contact into workflow (?<workflow>.+)` | - `workflow`: Workflow's Name or ID <br><br>- `email`: Contact's email address |
 <!-- stepDetailsEnd -->
 
 ## Development and Contributing
