@@ -1,0 +1,19 @@
+scenario: Enrolling HubSpot Contact into Workflow
+description: Proves that the Enroll HubSpot contact to Workflow step is working 
+
+steps:
+- step: Create or update a hubspot contact
+  data:
+    contact:
+        email: hsworkflow@thisisjust.atomatest.com
+        firstName: Roses
+        lastName: Lim
+        company: HS Corp
+- step: Validate that the the firstname field on hubspot contact hsworkflow@thisisjust.atomatest.com should be Roses
+- step: Validate that the lifecyclestage field on hubspot contact hsworkflow@thisisjust.atomatest.com should be subscriber
+- step: Enroll the hsworkflow@thisisjust.atomatest.com hubspot contact into workflow MQL and Email
+- step: Enroll the hsworkflow@thisisjust.atomatest.com hubspot contact into workflow Test
+- step: Check that the hsworkflow@thisisjust.atomatest.com hubspot contact should currently be enrolled in workflow MQL and Email
+- step: Check that the hsworkflow@thisisjust.atomatest.com hubspot contact should currently be enrolled in workflow Test
+- step: Validate that the lifecyclestage field on hubspot contact hsworkflow@thisisjust.atomatest.com should be marketingqualifiedlead
+- step: delete the hsworkflow@thisisjust.atomatest.com hubspot contact
