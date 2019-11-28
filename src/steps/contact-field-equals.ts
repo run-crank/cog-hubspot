@@ -7,7 +7,7 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
 
   protected stepName: string = 'Check a field on a HubSpot Contact';
   // tslint:disable-next-line:max-line-length
-  protected stepExpression: string = 'the (?<field>[a-zA-Z0-9_-]+) field on hubspot contact (?<email>.+) should be (?<expectation>.+)';
+  protected stepExpression: string = 'the (?<field>[a-zA-Z0-9_-]+) field on hubspot contact (?<email>.+) should (?<operator>be less than|be greater than|be|contain|not be|not contain) (?<expectation>.+)';
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
   protected expectedFields: Field[] = [{
     field: 'email',
@@ -18,6 +18,12 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     type: FieldDefinition.Type.STRING,
     description: 'Field name to check',
   }, {
+    field: 'operator',
+    type: FieldDefinition.Type.STRING,
+    optionality: FieldDefinition.Optionality.OPTIONAL,
+    description: 'Check Logic (be, not be, contain, not contain, be greater than, or be less than)',
+  },
+  {
     field: 'expectation',
     type: FieldDefinition.Type.ANYSCALAR,
     description: 'Expected field value',
@@ -28,6 +34,7 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     const expectation = stepData.expectation;
     const email = stepData.email;
     const field = stepData.field;
+    const operator = stepData.operator || 'be';
 
     try {
       const contact = await this.client.getContactByEmail(email);
@@ -38,14 +45,13 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
         ]);
       }
 
-      // tslint:disable-next-line:triple-equals
-      if (contact.properties[field].value == expectation) {
-        return this.pass('The %s field was %s, as expected.', [
+      if (this.compare(operator, contact.properties[field].value, expectation)) {
+        return this.pass(this.operatorSuccessMessages[operator.replace(/\s/g, '').toLowerCase()], [
           field,
           expectation,
         ]);
       } else {
-        return this.fail('Expected %s to be %s, but it was actually %s.', [
+        return this.fail(this.operatorFailMessages[operator.replace(/\s/g, '').toLowerCase()], [
           field,
           expectation,
           contact.properties[field].value,
