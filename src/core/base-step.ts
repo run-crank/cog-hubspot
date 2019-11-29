@@ -1,4 +1,3 @@
-import { ClientWrapper } from '../client/client-wrapper';
 import { StepDefinition, FieldDefinition, Step as PbStep, RunStepResponse } from '../proto/cog_pb';
 import { Value } from 'google-protobuf/google/protobuf/struct_pb';
 import * as moment from 'moment';
@@ -44,7 +43,7 @@ export abstract class BaseStep {
     belessthan: 'The %s field was less than %s, as expected',
   };
 
-  constructor(protected client: ClientWrapper) {}
+  constructor(protected client: any) {}
 
   getId(): string {
     return this.constructor.name;
