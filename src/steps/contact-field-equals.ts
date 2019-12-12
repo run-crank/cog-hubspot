@@ -64,9 +64,9 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
         return this.error('%s Please provide one of: %s', [e.message, baseOperators.join(', ')]);
       }
       if (e instanceof util.InvalidOperandError) {
-        return this.error('There was an error during validation of account field: %s', [e.message]);
+        return this.error('There was an error checking the contact field: %s', [e.message]);
       }
-      return this.error('There was an error during validation of account field: %s', [e.message]);
+      return this.error('There was an error checking the contact field: %s', [e.message]);
     }
   }
 
