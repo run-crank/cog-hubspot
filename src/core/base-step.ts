@@ -1,6 +1,5 @@
 import { StepDefinition, FieldDefinition, Step as PbStep, RunStepResponse } from '../proto/cog_pb';
 import { Value } from 'google-protobuf/google/protobuf/struct_pb';
-import * as moment from 'moment';
 import * as util from '@run-crank/utilities';
 
 // tslint:disable:triple-equals
