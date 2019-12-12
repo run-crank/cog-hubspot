@@ -1,6 +1,7 @@
 import { StepDefinition, FieldDefinition, Step as PbStep, RunStepResponse } from '../proto/cog_pb';
 import { Value } from 'google-protobuf/google/protobuf/struct_pb';
 import * as moment from 'moment';
+import * as util from '@run-crank/utilities';
 
 // tslint:disable:triple-equals
 // tslint:disable:no-else-after-return
@@ -25,25 +26,13 @@ export abstract class BaseStep {
   protected stepType: StepDefinition.Type;
   protected expectedFields: Field[];
 
-  operatorFailMessages = {
-    be: 'Expected %s field to be %s, but it was actually %s',
-    notbe: 'Expected %s field not to be %s, but it was also %s',
-    contain: 'Expected %s field to contain %s, but it is not contained in %s',
-    notcontain: 'Expected %s field not to contain %s, but it is contained in %s',
-    begreaterthan: '%s field is expected to be greater than %s, but its value was %s',
-    belessthan: '%s field is expected to be less than %s, but its value was %s',
-  };
+  public operatorFailMessages;
+  public operatorSuccessMessages;
 
-  operatorSuccessMessages = {
-    be: 'The %s field was set to %s, as expected',
-    notbe: 'The %s field was not set to %s, as expected',
-    contain: 'The %s field contains %s, as expected',
-    notcontain: 'The %s field does not contain %s, as expected',
-    begreaterthan: 'The %s field was greater than %s, as expected',
-    belessthan: 'The %s field was less than %s, as expected',
-  };
-
-  constructor(protected client: any) {}
+  constructor(protected client) {
+    this.operatorFailMessages = util.operatorFailMessages;
+    this.operatorSuccessMessages = util.operatorSuccessMessages;
+  }
 
   getId(): string {
     return this.constructor.name;
