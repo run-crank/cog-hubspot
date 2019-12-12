@@ -62,38 +62,7 @@ export abstract class BaseStep {
   }
 
   compare(operator: string, actualValue: string, value:string): boolean {
-    const validOperators = ['be', 'not be', 'contain', 'not contain', 'be greater than', 'be less than'];
-    const dateTimeFormat = /\d{4}-\d{2}-\d{2}(?:.?\d{2}:\d{2}:\d{2})?/gi;
-
-    if (validOperators.includes(operator.toLowerCase())) {
-      if (operator == 'be') {
-        return actualValue == value;
-      } else if (operator == 'not be') {
-        return actualValue != value;
-      } else if (operator == 'contain') {
-        return actualValue.includes(value);
-      } else if (operator == 'not contain') {
-        return !actualValue.includes(value);
-      } else if (operator == 'be greater than') {
-        if (dateTimeFormat.test(actualValue) && dateTimeFormat.test(value)) {
-          return moment(actualValue).isAfter(value);
-        } else if (!isNaN(Number(actualValue)) && !isNaN(Number(value))) {
-          return parseFloat(actualValue) > parseFloat(value);
-        } else {
-          throw new Error(`Couldn't check that ${actualValue} > ${value}. The ${operator} operator can only be used with numeric or date values.`);
-        }
-      } else if (operator == 'be less than') {
-        if (dateTimeFormat.test(actualValue) && dateTimeFormat.test(value)) {
-          return moment(actualValue).isBefore(value);
-        } else if (!isNaN(Number(actualValue)) && !isNaN(Number(value))) {
-          return parseFloat(actualValue) < parseFloat(value);
-        } else {
-          throw new Error(`Couldn't check that ${actualValue} < ${value}. The ${operator} operator can only be used with numeric or date values.`);
-        }
-      }
-    } else {
-      throw new Error(`${operator}" is an invalid operator. Please provide one of: ${validOperators.join(', ')}`);
-    }
+    return util.compare(operator, actualValue, value);
   }
 
   protected pass(message: string, messageArgs: any[] = []): RunStepResponse {
