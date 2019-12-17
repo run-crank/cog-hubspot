@@ -48,12 +48,12 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
       }
 
       if (this.compare(operator, contact.properties[field].value, expectation)) {
-        return this.pass(this.operatorSuccessMessages[operator.replace(/\s/g, '').toLowerCase()], [
+        return this.pass(this.operatorSuccessMessages[operator], [
           field,
           expectation,
         ]);
       } else {
-        return this.fail(this.operatorFailMessages[operator.replace(/\s/g, '').toLowerCase()], [
+        return this.fail(this.operatorFailMessages[operator], [
           field,
           expectation,
           contact.properties[field].value,
