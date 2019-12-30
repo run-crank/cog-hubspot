@@ -3,12 +3,14 @@
 #
 # - On every branch except master:
 #   - Runs npm run lint and npm test
+#   - Runs docker build and attempts to crank cog:install the local, built cog.
 # - On master branch commits:
-#   - Run the above lint/tests
-#   - Build the docker image, tag it with dev-v[N], and push the tag
+#   - Runs the above lint/tests
+#   - Build sthe docker image and attempts to install the local, built cog.
+#    - Tags the local image with dev-v[N], and pushes the tag up.
 # - On every git tag beginning with `vX.Y.Z`:
-#   - Build the docker image
-#   - Tag the image `latest` and `X.Y.Z` and push both tags
+#   - Builds the docker image
+#   - Tags the image `latest` and `X.Y.Z` and pushes both tags
 #
 # In order for Docker publishing to work, you will need to do the following:
 #
