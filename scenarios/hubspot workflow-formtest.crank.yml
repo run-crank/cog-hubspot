@@ -1,0 +1,25 @@
+scenario: Enrolling a HubSpot Contact from Web into Workflow 
+description: Proves that the Enroll HubSpot contact to Workflow step is working 
+
+tokens:
+  test:
+    email: hswflow@thisisjust.atomatest.com
+    lastname: Grey
+    firstname: Jean
+    submit: input[type=submit]
+  
+steps:
+- step: Navigate to https://automaton-dev-6187889-6187889.hs-sites.com/become-an-automaton-test-hubspot-contact#
+- step: Fill out input[name=firstname] with {{test.firstname}}
+- step: Fill out input[name=lastname] with {{test.lastname}}
+- step: Fill out input[name=email] with {{test.email}}
+- step: Submit the form by clicking {{test.submit}}
+- waitFor: 60
+  step: Validate that the email field on hubspot contact {{test.email}} should be {{test.email}}
+- step: Validate that the lastname field on hubspot contact {{test.email}} should be {{test.lastname}}
+- step: Validate that the firstname field on hubspot contact {{test.email}} should be {{test.firstname}}
+- step: Enroll the {{test.email}} hubspot contact into workflow MQL and Email
+- step: Check that the {{test.email}} hubspot contact should currently be enrolled in workflow MQL and Email
+- waitFor: 2
+  step: Validate that the lifecyclestage field on hubspot contact {{test.email}} should be marketingqualifiedlead
+- step: Delete the {{test.email}} Hubspot contact.
