@@ -1,0 +1,20 @@
+scenario: Enroll Contact in Workflow
+description: >
+  This scenario proves that the Enroll a HubSpot Contact into a Workflow step
+  is working as expected.
+
+tokens:
+  test.email: workflow.enroll.test@automatoninc.com
+  test.workflow: MQL and Email
+  expected.stage: marketingqualifiedlead
+
+steps:
+- step: Given I create or update a HubSpot Contact
+  data:
+    contact:
+      email: '{{test.email}}'
+      lifecyclestage: lead
+- step: When I enroll the {{test.email}} HubSpot Contact into workflow {{test.workflow}}
+- step: Then the lifecyclestage field on HubSpot Contact {{test.email}} should be {{expected.stage}}
+  failAfter: 60
+- step: Finally, delete the {{test.email}} HubSpot Contact

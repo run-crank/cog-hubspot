@@ -1,0 +1,19 @@
+scenario: Check Contact Workflow Enrollment
+description: >
+  This scenario proves that the Check Workflow Enrollment of a HubSpot Contact
+  step is working as expected.
+
+tokens:
+  test.email: workflow.validate.test@automatoninc.com
+  expected.wname: MQL and Email
+  expected.wid: 7267160
+
+steps:
+- step: Given I create or update a HubSpot Contact
+  data:
+    contact:
+      email: '{{test.email}}'
+- step: When I enroll the {{test.email}} HubSpot Contact into workflow {{expected.wname}}
+- step: Then the {{test.email}} HubSpot Contact should currently be enrolled in workflow {{expected.wid}}
+- step: Then the {{test.email}} HubSpot Contact should currently be enrolled in workflow {{expected.wname}}
+- step: Finally, delete the {{test.email}} HubSpot Contact
