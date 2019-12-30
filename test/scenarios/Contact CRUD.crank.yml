@@ -1,0 +1,21 @@
+scenario: Contact CRUD Steps
+description: >
+  This scenario proves that contact creation, checking, and deletion steps work
+  as expected.
+
+tokens:
+  test.email: hubspot@example.com
+  test.lastname: Doe
+  test.company: Sample Company
+
+steps:
+- step: Given I create or update a HubSpot Contact
+  data:
+    contact:
+      email: '{{test.email}}'
+      lastname: '{{test.lastname}}'
+      company: '{{test.company}}'
+- step: Then the email field on HubSpot Contact {{test.email}} should be {{test.email}}
+- step: And the company field on HubSpot Contact {{test.email}} should be {{test.company}}
+- step: And the lastname field on HubSpot Contact {{test.email}} should be {{test.lastname}}
+- step: Finally, delete the {{test.email}} HubSpot Contact

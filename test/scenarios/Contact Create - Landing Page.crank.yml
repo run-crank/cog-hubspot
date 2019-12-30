@@ -1,0 +1,23 @@
+scenario: Landing Page Contact Creation
+description: >
+  This test proves that a HubSpot contact created from a HubSpot landing page
+  can be checked and deleted.
+
+tokens:
+  test:
+    email: hs@ys1.com
+    lastname: Chang
+    firstname: Jazelle
+    submit: input[type=submit]
+
+steps:
+- step: Given I navigate to https://automaton-dev-6187889-6187889.hs-sites.com/become-an-automaton-test-hubspot-contact#
+- step: When I fill out input[name=firstname] with {{test.firstname}}
+- step: And I fill out input[name=lastname] with {{test.lastname}}
+- step: And I fill out input[name=email] with {{test.email}}
+- step: And I submit the form by clicking {{test.submit}}
+- step: Then the email field on hubspot contact {{test.email}} should be {{test.email}}
+  failAfter: 60
+- step: And the lastname field on hubspot contact {{test.email}} should be {{test.lastname}}
+- step: And the firstname field on hubspot contact {{test.email}} should be {{test.firstname}}
+- step: Finally, delete the {{test.email}} Hubspot contact.
