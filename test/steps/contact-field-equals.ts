@@ -46,6 +46,7 @@ describe('ContactFieldEquals', () => {
       expect(fields[1].type).to.equal(FieldDefinition.Type.STRING);
 
       expect(fields[2].key).to.equal('operator');
+      expect(fields[2].optionality).to.equal(FieldDefinition.Optionality.OPTIONAL);
       expect(fields[2].type).to.equal(FieldDefinition.Type.STRING);
 
       expect(fields[3].key).to.equal('expectation');
@@ -103,6 +104,7 @@ describe('ContactFieldEquals', () => {
           properties: {
             email: expectedEmail,
             lastname: { value: expectedLastname },
+            age: { value: 25 },
           },
         }));
       });
@@ -110,6 +112,32 @@ describe('ContactFieldEquals', () => {
       it('should respond with pass', async () => {
         const response: RunStepResponse = await stepUnderTest.executeStep(protoStep);
         expect(response.getOutcome()).to.equal(RunStepResponse.Outcome.PASSED);
+      });
+
+      describe('Util errors', () => {
+        it('should respond with error when invalid operator was provided', async () => {
+          protoStep.setData(Struct.fromJavaScript({
+            email: 'hubspot@test.com',
+            expectation: 'doe',
+            field: 'age',
+            operator: 'unknown operator',
+          }));
+
+          const response: RunStepResponse = await stepUnderTest.executeStep(protoStep);
+          expect(response.getOutcome()).to.equal(RunStepResponse.Outcome.ERROR);
+        });
+
+        it('should respond with error when actual and expected values are compared with different types', async () => {
+          protoStep.setData(Struct.fromJavaScript({
+            email: 'hubspot@test.com',
+            expectation: 'nonNumeric',
+            field: 'age',
+            operator: 'be greater than',
+          }));
+
+          const response: RunStepResponse = await stepUnderTest.executeStep(protoStep);
+          expect(response.getOutcome()).to.equal(RunStepResponse.Outcome.ERROR);
+        });
       });
     });
 
