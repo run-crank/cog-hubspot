@@ -1,0 +1,19 @@
+scenario: Contact API with operators
+description: This scenario proves that the smooth operators are working when validating fields of a Contact
+
+steps:
+- step: When I create or update a hubspot contact
+  data:
+    contact:
+        email: jakehs@thisisjust.atomatest.com
+        firstName: jake
+        lastName: lozan
+        company: HS Corp
+        date_of_birth: 705933481000
+- step: Then the email field on hubspot contact jakehs@thisisjust.atomatest.com should not be jake@thisisjust.atomatest.com
+- step: And the firstname field on Hubspot contact jakehs@thisisjust.atomatest.com should contain J
+- step: And the lastname field on Hubspot contact jakehs@thisisjust.atomatest.com should not contain be
+- step: And the company field on Hubspot contact jakehs@thisisjust.atomatest.com should be HS Corp
+- step: And the date_of_birth field on Hubspot contact jakehs@thisisjust.atomatest.com should be less than 737469481000
+- step: And the createdate field on Hubspot contact jakehs@thisisjust.atomatest.com should be greater than 807469481000
+- step: Finally, delete the jakehs@thisisjust.atomatest.com Hubspot contact.
