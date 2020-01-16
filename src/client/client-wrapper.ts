@@ -3,6 +3,7 @@ import * as Hubspot from 'hubspot';
 import { Field } from '../core/base-step';
 import { FieldDefinition } from '../proto/cog_pb';
 import { ContactAwareMixin, WorkflowAwareMixin } from './mixins';
+import { DateAwareMixin } from './mixins/date-aware';
 
 class ClientWrapper {
   public static expectedAuthFields: Field[] = [{
@@ -41,9 +42,9 @@ class ClientWrapper {
   }
 }
 
-interface ClientWrapper extends ContactAwareMixin, WorkflowAwareMixin {}
+interface ClientWrapper extends ContactAwareMixin, WorkflowAwareMixin, DateAwareMixin {}
 
-applyMixins(ClientWrapper, [ContactAwareMixin, WorkflowAwareMixin]);
+applyMixins(ClientWrapper, [ContactAwareMixin, WorkflowAwareMixin, DateAwareMixin]);
 
 function applyMixins(derivedCtor: any, baseCtors: any[]) {
   baseCtors.forEach((baseCtor) => {
