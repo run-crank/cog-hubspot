@@ -1,7 +1,7 @@
 export class DateAwareMixin {
   public isDate(value: any): boolean {
     let result = false;
-    const minEpochValue = 605692800;
+    const minEpochValue = 605692800000;
     const today = new Date();
     const tenYearsFromNow = today.setFullYear(today.getFullYear() + 10).valueOf();
 

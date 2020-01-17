@@ -85,16 +85,23 @@ describe('ClientWrapper', () => {
   });
 
   it('should identify date values', () => {
-    const validEpoch = 1589245171;
+    const validEpochMs = 1589245171000;
     metadata = new Metadata();
     clientWrapperUnderTest = new ClientWrapper(metadata, hubspotConstructorStub);
-    expect(clientWrapperUnderTest.isDate(validEpoch)).to.equal(true);
+    expect(clientWrapperUnderTest.isDate(validEpochMs)).to.equal(true);
   });
 
-  it('should convert epoch dates to YYYY-MM-DD format', () => {
-    const validEpoch = 1579245603000;
+  it('should not identify regular numbers as date values', () => {
+    const oneBillionIsh = 1678900000;
     metadata = new Metadata();
     clientWrapperUnderTest = new ClientWrapper(metadata, hubspotConstructorStub);
-    expect(clientWrapperUnderTest.toDate(validEpoch)).to.equal('2020-01-17T07:20:03.000Z');
+    expect(clientWrapperUnderTest.isDate(oneBillionIsh)).to.equal(false);
+  });
+
+  it('should convert epoch dates to ISO format', () => {
+    const validEpochMs = 1579245603000;
+    metadata = new Metadata();
+    clientWrapperUnderTest = new ClientWrapper(metadata, hubspotConstructorStub);
+    expect(clientWrapperUnderTest.toDate(validEpochMs)).to.equal('2020-01-17T07:20:03.000Z');
   });
 });
