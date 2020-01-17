@@ -99,6 +99,7 @@ describe('ContactFieldEquals', () => {
           email: expectedEmail,
           expectation: expectedLastname,
           field: 'lastname',
+          operator: 'be',
         }));
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
           properties: {
@@ -149,6 +150,7 @@ describe('ContactFieldEquals', () => {
           email: expectedEmail,
           expectation: 'wrong expectation',
           field: 'lastname',
+          operator: 'be',
         }));
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
           properties: {
