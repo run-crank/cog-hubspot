@@ -108,6 +108,7 @@ describe('ContactFieldEquals', () => {
             email: expectedEmail,
             lastname: { value: expectedLastname },
             age: { value: 25 },
+            createdate: { value: 1579245170 },
           },
         }));
       });
