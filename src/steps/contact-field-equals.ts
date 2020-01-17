@@ -48,7 +48,7 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
       }
 
       const value = contact.properties[field].value;
-      const actual = this.client.isDate('contact', field) ? this.client.toDate(value) : value;
+      const actual = this.client.isDate(value) ? this.client.toDate(value) : value;
 
       if (this.compare(operator, actual, expectation)) {
         return this.pass(this.operatorSuccessMessages[operator], [
