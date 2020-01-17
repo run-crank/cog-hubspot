@@ -19,6 +19,8 @@ describe('ContactFieldEquals', () => {
     protoStep = new ProtoStep();
     clientWrapperStub = sinon.stub();
     clientWrapperStub.getContactByEmail = sinon.stub();
+    clientWrapperStub.isDate = sinon.stub();
+    clientWrapperStub.isDate.returns(false);
     stepUnderTest = new Step(clientWrapperStub);
   });
 
@@ -99,12 +101,14 @@ describe('ContactFieldEquals', () => {
           email: expectedEmail,
           expectation: expectedLastname,
           field: 'lastname',
+          operator: 'be',
         }));
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
           properties: {
             email: expectedEmail,
             lastname: { value: expectedLastname },
             age: { value: 25 },
+            createdate: { value: 1579245170 },
           },
         }));
       });
@@ -149,6 +153,7 @@ describe('ContactFieldEquals', () => {
           email: expectedEmail,
           expectation: 'wrong expectation',
           field: 'lastname',
+          operator: 'be',
         }));
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
           properties: {
