@@ -19,6 +19,8 @@ describe('ContactFieldEquals', () => {
     protoStep = new ProtoStep();
     clientWrapperStub = sinon.stub();
     clientWrapperStub.getContactByEmail = sinon.stub();
+    clientWrapperStub.isDate = sinon.stub();
+    clientWrapperStub.isDate.returns(false);
     stepUnderTest = new Step(clientWrapperStub);
   });
 
