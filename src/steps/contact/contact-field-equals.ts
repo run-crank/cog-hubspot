@@ -1,9 +1,9 @@
 /*tslint:disable:no-else-after-return*/
 
-import { BaseStep, Field, StepInterface } from '../core/base-step';
-import { Step, FieldDefinition, StepDefinition } from '../proto/cog_pb';
+import { BaseStep, Field, StepInterface } from '../../core/base-step';
+import { Step, FieldDefinition, StepDefinition } from '../../proto/cog_pb';
 import * as util from '@run-crank/utilities';
-import { baseOperators } from '../client/contants/operators';
+import { baseOperators } from '../../client/contants/operators';
 
 export class ContactFieldEquals extends BaseStep implements StepInterface {
 
