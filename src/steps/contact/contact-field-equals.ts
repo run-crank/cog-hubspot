@@ -1,7 +1,7 @@
 /*tslint:disable:no-else-after-return*/
 
-import { BaseStep, Field, StepInterface } from '../../core/base-step';
-import { Step, FieldDefinition, StepDefinition } from '../../proto/cog_pb';
+import { BaseStep, Field, StepInterface, ExpectedRecord } from '../../core/base-step';
+import { Step, FieldDefinition, StepDefinition, RecordDefinition } from '../../proto/cog_pb';
 import * as util from '@run-crank/utilities';
 import { baseOperators } from '../../client/contants/operators';
 
@@ -31,6 +31,21 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     description: 'Expected field value',
   }];
 
+  protected expectedRecords: ExpectedRecord[] = [{
+    id: 'contact',
+    type: RecordDefinition.Type.KEYVALUE,
+    fields: [{
+      field: 'id',
+      type: FieldDefinition.Type.STRING,
+      description: 'The contact\'s ID',
+    }, {
+      field: 'email',
+      type: FieldDefinition.Type.EMAIL,
+      description: 'The contact\'s Email',
+    }],
+    dynamicFields: true,
+  }];
+
   async executeStep(step: Step) {
     const stepData: any = step.getData() ? step.getData().toJavaScript() : {};
     const expectation = stepData.expectation;
@@ -50,17 +65,16 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
       const value = contact.properties[field].value;
       const actual = this.client.isDate(value) ? this.client.toDate(value) : value;
 
+      const contactRecord = {};
+      // tslint:disable-next-line:max-line-length
+      Object.keys(contact.properties).forEach(key => contactRecord[key] = contact.properties[key].value);
+      const record = this.keyValue('contact', 'Checked Contact', contactRecord);
+
       if (this.compare(operator, actual, expectation)) {
-        return this.pass(this.operatorSuccessMessages[operator], [
-          field,
-          expectation,
-        ]);
+        return this.pass(this.operatorSuccessMessages[operator], [field, expectation], [record]);
       } else {
-        return this.fail(this.operatorFailMessages[operator], [
-          field,
-          expectation,
-          actual,
-        ]);
+        // tslint:disable-next-line:max-line-length
+        return this.fail(this.operatorFailMessages[operator], [field, expectation, actual], [record]);
       }
     } catch (e) {
       if (e instanceof util.UnknownOperatorError) {

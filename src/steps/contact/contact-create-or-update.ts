@@ -1,7 +1,7 @@
 /*tslint:disable:no-else-after-return*/
 
-import { BaseStep, Field, StepInterface } from '../../core/base-step';
-import { Step, FieldDefinition, StepDefinition } from '../../proto/cog_pb';
+import { BaseStep, Field, StepInterface, ExpectedRecord } from '../../core/base-step';
+import { Step, FieldDefinition, StepDefinition, RecordDefinition } from '../../proto/cog_pb';
 
 export class CreateOrUpdateContactStep extends BaseStep implements StepInterface {
 
@@ -13,6 +13,17 @@ export class CreateOrUpdateContactStep extends BaseStep implements StepInterface
     field: 'contact',
     type: FieldDefinition.Type.MAP,
     description: 'A map of field names to field values',
+  }];
+
+  protected expectedRecords: ExpectedRecord[] = [{
+    id: 'contact',
+    type: RecordDefinition.Type.KEYVALUE,
+    fields: [{
+      field: 'id',
+      type: FieldDefinition.Type.STRING,
+      description: 'The contact\'s ID',
+    }],
+    dynamicFields: true,
   }];
 
   async executeStep(step: Step) {
@@ -29,12 +40,12 @@ export class CreateOrUpdateContactStep extends BaseStep implements StepInterface
           value: stepData.contact[key],
         });
       });
+
       const data = await this.client.createOrUpdateContact(email, contact);
+      const record = this.keyValue('contact', 'Created Contact', stepData.contact);
 
       if (data) {
-        return this.pass('Successfully created or updated HubSpot contact %s', [
-          email,
-        ]);
+        return this.pass('Successfully created or updated HubSpot contact %s', [email], [record]);
       } else {
         return this.fail('Unable to create or update HubSpot contact');
       }

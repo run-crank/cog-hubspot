@@ -23,9 +23,11 @@ export class DeleteContactStep extends BaseStep implements StepInterface {
       const data = await this.client.deleteContactByEmail(email);
 
       if (data.deleted) {
-        return this.pass('Successfully deleted HubSpot contact %s', [
-          email,
-        ]);
+        const contactRecord = {};
+        // tslint:disable-next-line:max-line-length
+        Object.keys(data.contact.properties).forEach(key => contactRecord[key] = data.contact.properties[key].value);
+        const record = this.keyValue('contact', 'Deleted Contact', contactRecord);
+        return this.pass('Successfully deleted HubSpot contact %s', [email], [record]);
       } else {
         return this.fail('Unable to delete HubSpot contact: %s', [
           data.reason,
