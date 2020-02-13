@@ -64,6 +64,9 @@ describe('ContactDeleteStep', () => {
         clientWrapperStub.deleteContactByEmail.returns(Promise.resolve({
           deleted: true,
           reason: 'OK',
+          contact: {
+            properties: {},
+          },
         }));
       });
 
@@ -81,6 +84,9 @@ describe('ContactDeleteStep', () => {
         clientWrapperStub.deleteContactByEmail.returns(Promise.resolve({
           deleted: false,
           reason: 'ERROR',
+          contact: {
+            properties: {},
+          },
         }));
       });
 

@@ -105,7 +105,6 @@ describe('ContactFieldEquals', () => {
         }));
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
           properties: {
-            email: expectedEmail,
             lastname: { value: expectedLastname },
             age: { value: 25 },
             createdate: { value: 1579245170 },
