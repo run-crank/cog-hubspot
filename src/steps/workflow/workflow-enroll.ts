@@ -1,4 +1,5 @@
 /*tslint:disable:no-else-after-return*/
+/*tslint:disable:max-line-length*/
 
 import { BaseStep, Field, StepInterface, ExpectedRecord } from '../../core/base-step';
 import { Step, FieldDefinition, StepDefinition, RecordDefinition } from '../../proto/cog_pb';
@@ -64,15 +65,9 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
       }
 
       await this.client.enrollContactToWorkflow(workflow, email);
-
-      return this.pass('The contact %s was successfully enrolled to workflow %s', [
-        email,
-        stepData.workflow,
-      ]);
+      return this.pass('The contact %s was successfully enrolled to workflow %s', [email, stepData.workflow]);
     } catch (e) {
-      return this.error('There was an error enrolling the HubSpot contact to workflow: %s', [
-        e.toString(),
-      ]);
+      return this.error('There was an error enrolling the HubSpot contact to workflow: %s', [e.toString()]);
     }
   }
 
