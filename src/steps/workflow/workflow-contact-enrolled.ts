@@ -114,7 +114,7 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
       } else {
         const headers = { name: 'Name', id: 'Id', type: 'Type', description: 'Description' };
         if (workflows.length === 1) {
-          workflowRecord = this.keyValue('workflow', 'Workflow Enrollment Candidate', workflows[0]);
+          workflowRecord = this.createWorkflowRecord(workflows[0]);
         } else {
           workflowRecord = this.table('matchedWorkflows', 'Matched Workflows', headers, workflows);
         }
@@ -151,6 +151,17 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
     obj['lastmodifieddate'] = this.client.toDate(obj['lastmodifieddate']);
     const record = this.keyValue('contact', 'Checked Contact', obj);
     return record;
+  }
+
+  createWorkflowRecord(workflow) {
+    const obj = {
+      id: workflow.id,
+      type: workflow.type,
+      name: workflow.name,
+      description: workflow.description,
+    };
+
+    return this.keyValue('workflow', 'Workflow Enrollment Candidate', obj);
   }
 }
 

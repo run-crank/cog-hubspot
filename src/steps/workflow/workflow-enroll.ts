@@ -80,7 +80,7 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
       }
 
       const contactRecord = this.createContactRecord(contact);
-
+      let workflowRecord;
       if (isNaN(workflow)) {
         const workflows = await this.client.findWorkflowByName(workflow);
 
@@ -98,11 +98,11 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
         if (workflows[0]) {
           workflow = workflows[0].id;
         }
+
+        workflowRecord = this.createWorkflowRecord(workflows[0]);
       }
 
       await this.client.enrollContactToWorkflow(workflow, email);
-
-      const workflowRecord = this.keyValue('workflow', 'Workflow Enrollment Candidate', workflow[0]);
 
       return this.pass(
         'The contact %s was successfully enrolled to workflow %s',
@@ -121,6 +121,17 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
     obj['lastmodifieddate'] = this.client.toDate(obj['lastmodifieddate']);
     const record = this.keyValue('contact', 'Contact Enrollment Candidate', obj);
     return record;
+  }
+
+  createWorkflowRecord(workflow) {
+    const obj = {
+      id: workflow.id,
+      type: workflow.type,
+      name: workflow.name,
+      description: workflow.description,
+    };
+
+    return this.keyValue('workflow', 'Workflow Enrollment Candidate', obj);
   }
 }
 
