@@ -1,7 +1,7 @@
 /*tslint:disable:no-else-after-return*/
 
 import { BaseStep, Field, StepInterface } from '../../core/base-step';
-import { Step, FieldDefinition, StepDefinition } from '../../proto/cog_pb';
+import { Step, FieldDefinition, StepDefinition, StepRecord } from '../../proto/cog_pb';
 
 export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInterface {
 
@@ -60,6 +60,14 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
     }
   }
 
+  createContactRecord(contact): StepRecord {
+    const obj = {};
+    Object.keys(contact.properties).forEach(key => obj[key] = contact.properties[key].value);
+    obj['createdate'] = this.client.toDate(obj['createdate']);
+    obj['lastmodifieddate'] = this.client.toDate(obj['lastmodifieddate']);
+    const record = this.keyValue('contact', 'Checked Contact', obj);
+    return record;
+  }
 }
 
 export { ContactEnrolledToWorkflowStep as Step };

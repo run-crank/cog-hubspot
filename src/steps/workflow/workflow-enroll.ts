@@ -2,7 +2,7 @@
 /*tslint:disable:max-line-length*/
 
 import { BaseStep, Field, StepInterface, ExpectedRecord } from '../../core/base-step';
-import { Step, FieldDefinition, StepDefinition, RecordDefinition } from '../../proto/cog_pb';
+import { Step, FieldDefinition, StepDefinition, RecordDefinition, StepRecord } from '../../proto/cog_pb';
 
 export class EnrollContactToWorkflowStep extends BaseStep implements StepInterface {
 
@@ -19,7 +19,7 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
     type: FieldDefinition.Type.EMAIL,
     description: 'Contact\'s email address',
   }];
-  
+
   protected expectedRecords: ExpectedRecord[] = [{
     id: 'workflow',
     type: RecordDefinition.Type.KEYVALUE,
@@ -49,14 +49,22 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
     let workflow = stepData.workflow;
 
     try {
+      const contact = await this.client.getContactByEmail(email);
+
+      if (!contact) {
+        return this.error('Can\'t enroll %s into %s: contact not found.', [email, stepData.workflow]);
+      }
+
+      const contactRecord = this.createContactRecord(contact);
+
       if (isNaN(workflow)) {
         const workflows = await this.client.findWorkflowByName(workflow);
+
         if (workflows.length > 1) {
-          // tslint:disable-next-line:max-line-length
-          return this.error('Can\'t enroll %s into %s: found more than one workflow with that name.', [
-            email,
-            workflow,
-          ]);
+          const headers = {};
+          Object.keys(workflows[0]).forEach(key => headers[key] = key);
+          const workflowRecords = this.table('matchedWorkflows', 'Matched Workflows', headers, workflows);
+          return this.error('Can\'t enroll %s into %s: found more than one workflow with that name.', [email, workflow], [workflowRecords, contactRecord]);
         }
 
         if (workflows[0]) {
@@ -65,12 +73,23 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
       }
 
       await this.client.enrollContactToWorkflow(workflow, email);
-      return this.pass('The contact %s was successfully enrolled to workflow %s', [email, stepData.workflow]);
+
+      const workflowRecord = this.keyValue('workflow', 'Workflow Enrollment Candidate', workflow[0]);
+
+      return this.pass('The contact %s was successfully enrolled to workflow %s', [email, stepData.workflow], [workflowRecord, contactRecord]);
     } catch (e) {
       return this.error('There was an error enrolling the HubSpot contact to workflow: %s', [e.toString()]);
     }
   }
 
+  createContactRecord(contact): StepRecord {
+    const obj = {};
+    Object.keys(contact.properties).forEach(key => obj[key] = contact.properties[key].value);
+    obj['createdate'] = this.client.toDate(obj['createdate']);
+    obj['lastmodifieddate'] = this.client.toDate(obj['lastmodifieddate']);
+    const record = this.keyValue('contact', 'Contact Enrollment Candidate', obj);
+    return record;
+  }
 }
 
 export { EnrollContactToWorkflowStep as Step };
