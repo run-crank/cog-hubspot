@@ -32,8 +32,7 @@ export class ContactAwareMixin {
       try {
         const contact = await this.client.contacts.getByEmail(email);
         const result = await this.client.contacts.delete(contact['vid']);
-        result.contact = contact;
-        resolve(result);
+        resolve({ result, contact });
       } catch (e) {
         reject(e.message);
       }

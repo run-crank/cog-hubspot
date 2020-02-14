@@ -22,7 +22,7 @@ export class DeleteContactStep extends BaseStep implements StepInterface {
     try {
       const data = await this.client.deleteContactByEmail(email);
 
-      if (data.deleted) {
+      if (data.result.deleted) {
         const contactRecord = {};
         // tslint:disable-next-line:max-line-length
         Object.keys(data.contact.properties).forEach(key => contactRecord[key] = data.contact.properties[key].value);
@@ -30,7 +30,7 @@ export class DeleteContactStep extends BaseStep implements StepInterface {
         return this.pass('Successfully deleted HubSpot contact %s', [email], [record]);
       } else {
         return this.fail('Unable to delete HubSpot contact: %s', [
-          data.reason,
+          data.result.reason,
         ]);
       }
     } catch (e) {

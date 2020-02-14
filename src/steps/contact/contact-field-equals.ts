@@ -1,8 +1,9 @@
 /*tslint:disable:no-else-after-return*/
 
 import { BaseStep, Field, StepInterface, ExpectedRecord } from '../../core/base-step';
-import { Step, FieldDefinition, StepDefinition, RecordDefinition } from '../../proto/cog_pb';
+import { Step, FieldDefinition, StepDefinition, RecordDefinition, StepRecord } from '../../proto/cog_pb';
 import * as util from '@run-crank/utilities';
+import * as moment from 'moment';
 import { baseOperators } from '../../client/contants/operators';
 
 export class ContactFieldEquals extends BaseStep implements StepInterface {
@@ -37,11 +38,19 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     fields: [{
       field: 'id',
       type: FieldDefinition.Type.STRING,
-      description: 'The contact\'s ID',
+      description: 'The Contact\'s ID',
     }, {
       field: 'email',
       type: FieldDefinition.Type.EMAIL,
-      description: 'The contact\'s Email',
+      description: 'The Contact\'s Email',
+    }, {
+      field: 'createdate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Create Date',
+    }, {
+      field: 'lastmodifieddate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Last Modified Date',
     }],
     dynamicFields: true,
   }];
@@ -65,11 +74,7 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
       const value = contact.properties[field].value;
       const actual = this.client.isDate(value) ? this.client.toDate(value) : value;
 
-      const contactRecord = {};
-      // tslint:disable-next-line:max-line-length
-      Object.keys(contact.properties).forEach(key => contactRecord[key] = contact.properties[key].value);
-      const record = this.keyValue('contact', 'Checked Contact', contactRecord);
-
+      const record = this.createRecord(contact);
       if (this.compare(operator, actual, expectation)) {
         return this.pass(this.operatorSuccessMessages[operator], [field, expectation], [record]);
       } else {
@@ -87,6 +92,17 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     }
   }
 
+  public createRecord(contact): StepRecord {
+    const obj = {};
+
+    console.log('Checked Contact', contact);
+    Object.keys(contact.properties).forEach(key => obj[key] = contact.properties[key].value);
+    obj['createdate'] = this.client.toDate(obj['createdate']);
+    obj['lastmodifieddate'] = this.client.toDate(obj['lastmodifieddate']);
+    const record = this.keyValue('contact', 'Checked Contact', obj);
+
+    return record;
+  }
 }
 
 export { ContactFieldEquals as Step };

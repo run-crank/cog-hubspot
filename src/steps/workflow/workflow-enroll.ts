@@ -1,7 +1,7 @@
 /*tslint:disable:no-else-after-return*/
 
-import { BaseStep, Field, StepInterface } from '../../core/base-step';
-import { Step, FieldDefinition, StepDefinition } from '../../proto/cog_pb';
+import { BaseStep, Field, StepInterface, ExpectedRecord } from '../../core/base-step';
+import { Step, FieldDefinition, StepDefinition, RecordDefinition } from '../../proto/cog_pb';
 
 export class EnrollContactToWorkflowStep extends BaseStep implements StepInterface {
 
@@ -17,6 +17,29 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
     field: 'email',
     type: FieldDefinition.Type.EMAIL,
     description: 'Contact\'s email address',
+  }];
+  
+  protected expectedRecords: ExpectedRecord[] = [{
+    id: 'workflow',
+    type: RecordDefinition.Type.KEYVALUE,
+    fields: [{
+      field: 'id',
+      type: FieldDefinition.Type.NUMERIC,
+      description: 'The Workflow\'s ID',
+    }, {
+      field: 'name',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Name',
+    }, {
+      field: 'type',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Type',
+    }, {
+      field: 'description',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Description',
+    }],
+    dynamicFields: true,
   }];
 
   async executeStep(step: Step) {

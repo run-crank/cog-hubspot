@@ -25,7 +25,6 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
     const workflow = stepData.workflow;
 
     try {
-
       const contact = await this.client.getContactByEmail(email);
 
       // tslint:disable-next-line:max-line-length

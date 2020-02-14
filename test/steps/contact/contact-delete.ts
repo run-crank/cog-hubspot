@@ -62,8 +62,10 @@ describe('ContactDeleteStep', () => {
           email: 'hubspot@test.com',
         }));
         clientWrapperStub.deleteContactByEmail.returns(Promise.resolve({
-          deleted: true,
-          reason: 'OK',
+          result: {
+            deleted: true,
+            reason: 'OK',
+          },
           contact: {
             properties: {},
           },
@@ -82,8 +84,10 @@ describe('ContactDeleteStep', () => {
           email: 'hubspot@test.com',
         }));
         clientWrapperStub.deleteContactByEmail.returns(Promise.resolve({
-          deleted: false,
-          reason: 'ERROR',
+          result: {
+            deleted: false,
+            reason: 'OK',
+          },
           contact: {
             properties: {},
           },
