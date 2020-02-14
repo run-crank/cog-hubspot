@@ -41,6 +41,27 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
       description: 'The Workflow\'s Description',
     }],
     dynamicFields: true,
+  }, {
+    id: 'matchedWorkflows',
+    type: RecordDefinition.Type.TABLE,
+    fields: [{
+      field: 'name',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Name',
+    }, {
+      field: 'id',
+      type: FieldDefinition.Type.NUMERIC,
+      description: 'The Workflow\'s ID',
+    }, {
+      field: 'type',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Type',
+    }, {
+      field: 'description',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Description',
+    }],
+    dynamicFields: true,
   }];
 
   async executeStep(step: Step) {
@@ -52,7 +73,10 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
       const contact = await this.client.getContactByEmail(email);
 
       if (!contact) {
-        return this.error('Can\'t enroll %s into %s: contact not found.', [email, stepData.workflow]);
+        return this.error(
+          'Can\'t enroll %s into %s: contact not found.',
+          [email, stepData.workflow],
+        );
       }
 
       const contactRecord = this.createContactRecord(contact);
@@ -64,7 +88,11 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
           const headers = {};
           Object.keys(workflows[0]).forEach(key => headers[key] = key);
           const workflowRecords = this.table('matchedWorkflows', 'Matched Workflows', headers, workflows);
-          return this.error('Can\'t enroll %s into %s: found more than one workflow with that name.', [email, workflow], [workflowRecords, contactRecord]);
+          return this.error(
+            'Can\'t enroll %s into %s: found more than one workflow with that name.',
+            [email, workflow],
+            [workflowRecords, contactRecord],
+          );
         }
 
         if (workflows[0]) {
@@ -76,7 +104,11 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
 
       const workflowRecord = this.keyValue('workflow', 'Workflow Enrollment Candidate', workflow[0]);
 
-      return this.pass('The contact %s was successfully enrolled to workflow %s', [email, stepData.workflow], [workflowRecord, contactRecord]);
+      return this.pass(
+        'The contact %s was successfully enrolled to workflow %s',
+        [email, stepData.workflow],
+        [workflowRecord, contactRecord],
+      );
     } catch (e) {
       return this.error('There was an error enrolling the HubSpot contact to workflow: %s', [e.toString()]);
     }

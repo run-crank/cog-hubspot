@@ -1,7 +1,8 @@
 /*tslint:disable:no-else-after-return*/
+// tslint:disable:max-line-length
 
-import { BaseStep, Field, StepInterface } from '../../core/base-step';
-import { Step, FieldDefinition, StepDefinition, StepRecord } from '../../proto/cog_pb';
+import { BaseStep, Field, StepInterface, ExpectedRecord } from '../../core/base-step';
+import { Step, FieldDefinition, StepDefinition, StepRecord, RecordDefinition } from '../../proto/cog_pb';
 
 export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInterface {
 
@@ -19,6 +20,71 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
     description: 'Contact\'s email address',
   }];
 
+  protected expectedRecords: ExpectedRecord[] = [{
+    id: 'contact',
+    type: RecordDefinition.Type.KEYVALUE,
+    fields: [{
+      field: 'id',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Contact\'s ID',
+    }, {
+      field: 'email',
+      type: FieldDefinition.Type.EMAIL,
+      description: 'The Contact\'s Email',
+    }, {
+      field: 'createdate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Create Date',
+    }, {
+      field: 'lastmodifieddate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Last Modified Date',
+    }],
+    dynamicFields: true,
+  }, {
+    id: 'workflow',
+    type: RecordDefinition.Type.KEYVALUE,
+    fields: [{
+      field: 'name',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Name',
+    }, {
+      field: 'id',
+      type: FieldDefinition.Type.NUMERIC,
+      description: 'The Workflow\'s ID',
+    }, {
+      field: 'type',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Type',
+    }, {
+      field: 'description',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Description',
+    }],
+    dynamicFields: true,
+  }, {
+    id: 'matchedWorkflows',
+    type: RecordDefinition.Type.TABLE,
+    fields: [{
+      field: 'name',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Name',
+    }, {
+      field: 'id',
+      type: FieldDefinition.Type.NUMERIC,
+      description: 'The Workflow\'s ID',
+    }, {
+      field: 'type',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Type',
+    }, {
+      field: 'description',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Workflow\'s Description',
+    }],
+    dynamicFields: true,
+  }];
+
   async executeStep(step: Step) {
     const stepData: any = step.getData().toJavaScript();
     const email: string = stepData.email;
@@ -27,32 +93,50 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
     try {
       const contact = await this.client.getContactByEmail(email);
 
-      // tslint:disable-next-line:max-line-length
-      const workflows = (await this.client.currentContactWorkflows(contact.properties['hs_object_id'].value)) || [];
+      if (!contact) {
+        return this.error(
+          'Contact %s was not found',
+          [email],
+        );
+      }
 
+      // Contact found, return as structured data
+      const contactRecord = this.createContactRecord(contact);
+      let workflowRecord;
+
+      const workflows = (await this.client.currentContactWorkflows(contact.properties['hs_object_id'].value)) || [];
       if (workflows.length === 0) {
-        return this.fail('Contact %s is currently not enrolled to any Workflow', [
-          email,
-        ]);
+        return this.fail(
+          'Contact %s is currently not enrolled to any Workflow',
+          [email],
+          [contactRecord],
+        );
+      } else {
+        const headers = { name: 'Name', id: 'Id', type: 'Type', description: 'Description' };
+        if (workflows.length === 1) {
+          workflowRecord = this.keyValue('workflow', 'Workflow Enrollment Candidate', workflows[0]);
+        } else {
+          workflowRecord = this.table('matchedWorkflows', 'Matched Workflows', headers, workflows);
+        }
       }
 
       const property = isNaN(workflow) ? 'name' : 'id';
-
       // tslint:disable-next-line:triple-equals
-      const enrolled = workflows.find(f => f[property] == workflow);
+      const isEnrolled = workflows.find(f => f[property] == workflow);
 
-      if (!enrolled) {
-        return this.fail('The Contact %s is not enrolled in the given workflow %s. Contact is enrolled in: %s', [
-          email,
-          workflow,
-          workflows.map(f => f[property]).join(', '),
-        ]);
+      if (!isEnrolled) {
+        return this.fail(
+          'The Contact %s is not enrolled in the given workflow %s. Contact is enrolled in: %s',
+          [email, workflow, workflows.map(f => f[property]).join(', ')],
+          [workflowRecord, contactRecord],
+        );
       }
 
-      return this.pass('The contact %s was verified to be enrolled in workflow %s', [
-        email,
-        workflow,
-      ]);
+      return this.pass(
+        'The contact %s was verified to be enrolled in workflow %s',
+        [email, workflow],
+        [workflowRecord, contactRecord],
+      );
     } catch (e) {
       return this.error('There was an error checking workflow enrollments for contact: %s', [
         e.toString(),
