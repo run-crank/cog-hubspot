@@ -65,11 +65,7 @@ export class CreateOrUpdateContactStep extends BaseStep implements StepInterface
   }
 
   public createRecord(contact): StepRecord {
-    const obj = {};
-    Object.keys(contact.properties).forEach(key => obj[key] = contact.properties[key].value);
-    obj['createdate'] = this.client.toDate(obj['createdate']);
-    obj['lastmodifieddate'] = this.client.toDate(obj['lastmodifieddate']);
-    const record = this.keyValue('contact', 'Created Contact', obj);
+    const record = this.keyValue('contact', 'Created Contact', contact);
     return record;
   }
 
