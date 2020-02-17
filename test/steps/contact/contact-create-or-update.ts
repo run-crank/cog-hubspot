@@ -19,6 +19,8 @@ describe('CreateOrUpdateContactStep', () => {
     protoStep = new ProtoStep();
     clientWrapperStub = sinon.stub();
     clientWrapperStub.createOrUpdateContact = sinon.stub();
+    clientWrapperStub.toDate = sinon.stub();
+    clientWrapperStub.toDate.returns(new Date().toISOString());
     stepUnderTest = new Step(clientWrapperStub);
   });
 
@@ -85,8 +87,13 @@ describe('CreateOrUpdateContactStep', () => {
     describe('Contact not created nor updated', () => {
       beforeEach(() => {
         protoStep.setData(Struct.fromJavaScript({
-          // tslint:disable-next-line:max-line-length
-          contact:  { email: 'hubspot@test.com', properties: { createdate: new Date().valueOf(), lastmodifieddate: new Date().valueOf() } },
+          contact:  {
+            email: 'hubspot@test.com',
+            properties: {
+              createdate: { value: new Date().valueOf() },
+              lastmodifieddate: { value: new Date().valueOf() },
+            },
+          },
         }));
         clientWrapperStub.createOrUpdateContact.returns(Promise.resolve(undefined));
       });
@@ -101,7 +108,13 @@ describe('CreateOrUpdateContactStep', () => {
       beforeEach(() => {
         protoStep.setData(Struct.fromJavaScript({
           // tslint:disable-next-line:max-line-length
-          contact:  { email: 'hubspot@test.com', properties: { createdate: new Date().valueOf(), lastmodifieddate: new Date().valueOf() } },
+          contact:  {
+            email: 'hubspot@test.com',
+            properties: {
+              createdate: { value: new Date().valueOf() },
+              lastmodifieddate: { value: new Date().valueOf() },
+            },
+          },
         }));
         clientWrapperStub.createOrUpdateContact.returns(Promise.reject('Error'));
       });

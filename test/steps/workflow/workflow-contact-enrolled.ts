@@ -20,6 +20,9 @@ describe('ContactEnrolledToWorkflowStep', () => {
     clientWrapperStub = sinon.stub();
     clientWrapperStub.getContactByEmail = sinon.stub();
     clientWrapperStub.currentContactWorkflows = sinon.stub();
+    clientWrapperStub.toDate = sinon.stub();
+    clientWrapperStub.toDate.returns(new Date().toISOString());
+
     stepUnderTest = new Step(clientWrapperStub);
   });
 
@@ -52,8 +55,13 @@ describe('ContactEnrolledToWorkflowStep', () => {
     describe('Contact is not enrolled', () => {
       beforeEach(() => {
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
-          properties: { hs_object_id: { value: 1 } },
+          properties: {
+            hs_object_id: { value: 1 },
+            createdate: { value: new Date().valueOf() },
+            lastmodifieddate: { value: new Date().valueOf() },
+          },
         }));
+
         clientWrapperStub.currentContactWorkflows.returns(Promise.resolve([{
           id: 321,
           name: 'Unique Workflow',
@@ -78,10 +86,16 @@ describe('ContactEnrolledToWorkflowStep', () => {
         clientWrapperStub.currentContactWorkflows.returns(Promise.resolve([{
           id: 12345,
           name: workflow,
+          type: 'default',
+          description: 'default',
         }]));
 
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
-          properties: { hs_object_id: { value: 1 } },
+          properties: {
+            hs_object_id: { value: 1 },
+            createdate: { value: new Date().valueOf() },
+            lastmodifieddate: { value: new Date().valueOf() },
+          },
         }));
 
         protoStep.setData(Struct.fromJavaScript({
