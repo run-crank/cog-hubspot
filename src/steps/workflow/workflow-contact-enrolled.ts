@@ -116,7 +116,15 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
         if (workflows.length === 1) {
           workflowRecord = this.createWorkflowRecord(workflows[0]);
         } else {
-          workflowRecord = this.table('matchedWorkflows', 'Matched Workflows', headers, workflows);
+          const table = workflows.map((workflow) => {
+            return {
+              id: workflow.id,
+              type: workflow.type,
+              name: workflow.name,
+              description: workflow.description,
+            };
+          });
+          workflowRecord = this.table('matchedWorkflows', 'Matched Workflows', headers, table);
         }
       }
 
