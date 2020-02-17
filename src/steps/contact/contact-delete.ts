@@ -19,7 +19,7 @@ export class DeleteContactStep extends BaseStep implements StepInterface {
     id: 'contact',
     type: RecordDefinition.Type.KEYVALUE,
     fields: [{
-      field: 'id',
+      field: 'hs_object_id',
       type: FieldDefinition.Type.STRING,
       description: 'The contact\'s ID',
     }, {
@@ -61,7 +61,7 @@ export class DeleteContactStep extends BaseStep implements StepInterface {
     Object.keys(contact.properties).forEach(key => obj[key] = contact.properties[key].value);
     obj['createdate'] = this.client.toDate(obj['createdate']);
     obj['lastmodifieddate'] = this.client.toDate(obj['lastmodifieddate']);
-    const record = this.keyValue('contact', 'Checked Contact', obj);
+    const record = this.keyValue('contact', 'Deleted Contact', obj);
     return record;
   }
 }

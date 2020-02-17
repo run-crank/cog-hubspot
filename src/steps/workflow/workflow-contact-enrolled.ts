@@ -107,7 +107,7 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
       const workflows = (await this.client.currentContactWorkflows(contact.properties['hs_object_id'].value)) || [];
       if (workflows.length === 0) {
         return this.fail(
-          'Contact %s is currently not enrolled to any Workflow',
+          'Contact %s is currently not enrolled in any Workflow',
           [email],
           [contactRecord],
         );

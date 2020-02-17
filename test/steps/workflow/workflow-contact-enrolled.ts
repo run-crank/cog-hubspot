@@ -65,6 +65,8 @@ describe('ContactEnrolledToWorkflowStep', () => {
         clientWrapperStub.currentContactWorkflows.returns(Promise.resolve([{
           id: 321,
           name: 'Unique Workflow',
+          type: 'default',
+          description: 'default',
         }]));
         protoStep.setData(Struct.fromJavaScript({
           workflow: 'Email Workfloww',

@@ -87,7 +87,16 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
         if (workflows.length > 1) {
           const headers = {};
           Object.keys(workflows[0]).forEach(key => headers[key] = key);
-          const workflowRecords = this.table('matchedWorkflows', 'Matched Workflows', headers, workflows);
+
+          const table = workflows.map((workflow) => {
+            return {
+              id: workflow.id,
+              type: workflow.type,
+              name: workflow.name,
+              description: workflow.description,
+            };
+          });
+          const workflowRecords = this.table('matchedWorkflows', 'Matched Workflows', headers, table);
           return this.error(
             'Can\'t enroll %s into %s: found more than one workflow with that name.',
             [email, workflow],
