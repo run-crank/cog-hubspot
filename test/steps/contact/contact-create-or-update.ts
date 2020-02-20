@@ -19,6 +19,8 @@ describe('CreateOrUpdateContactStep', () => {
     protoStep = new ProtoStep();
     clientWrapperStub = sinon.stub();
     clientWrapperStub.createOrUpdateContact = sinon.stub();
+    clientWrapperStub.toDate = sinon.stub();
+    clientWrapperStub.toDate.returns(new Date().toISOString());
     stepUnderTest = new Step(clientWrapperStub);
   });
 
@@ -70,7 +72,8 @@ describe('CreateOrUpdateContactStep', () => {
     describe('Contact successfully created or updated', () => {
       beforeEach(() => {
         protoStep.setData(Struct.fromJavaScript({
-          contact:  { email: 'hubspot@test.com' },
+          // tslint:disable-next-line:max-line-length
+          contact:  { email: 'hubspot@test.com', properties: { createdate: new Date().valueOf(), lastmodifieddate: new Date().valueOf() } },
         }));
         clientWrapperStub.createOrUpdateContact.returns(Promise.resolve({}));
       });
@@ -84,7 +87,13 @@ describe('CreateOrUpdateContactStep', () => {
     describe('Contact not created nor updated', () => {
       beforeEach(() => {
         protoStep.setData(Struct.fromJavaScript({
-          contact:  { email: 'hubspot@test.com' },
+          contact:  {
+            email: 'hubspot@test.com',
+            properties: {
+              createdate: { value: new Date().valueOf() },
+              lastmodifieddate: { value: new Date().valueOf() },
+            },
+          },
         }));
         clientWrapperStub.createOrUpdateContact.returns(Promise.resolve(undefined));
       });
@@ -98,7 +107,14 @@ describe('CreateOrUpdateContactStep', () => {
     describe('Error occurred', () => {
       beforeEach(() => {
         protoStep.setData(Struct.fromJavaScript({
-          contact:  { email: 'hubspot@test.com' },
+          // tslint:disable-next-line:max-line-length
+          contact:  {
+            email: 'hubspot@test.com',
+            properties: {
+              createdate: { value: new Date().valueOf() },
+              lastmodifieddate: { value: new Date().valueOf() },
+            },
+          },
         }));
         clientWrapperStub.createOrUpdateContact.returns(Promise.reject('Error'));
       });

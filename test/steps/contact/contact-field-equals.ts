@@ -21,6 +21,8 @@ describe('ContactFieldEquals', () => {
     clientWrapperStub.getContactByEmail = sinon.stub();
     clientWrapperStub.isDate = sinon.stub();
     clientWrapperStub.isDate.returns(false);
+    clientWrapperStub.toDate = sinon.stub();
+    clientWrapperStub.toDate.returns(new Date().toISOString());
     stepUnderTest = new Step(clientWrapperStub);
   });
 
@@ -83,6 +85,8 @@ describe('ContactFieldEquals', () => {
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
           properties: {
             email: expectedEmail,
+            createdate: { value: 1579245170 },
+            lastmodifieddate: { value: 1579245170 },
           },
         }));
       });
@@ -105,10 +109,10 @@ describe('ContactFieldEquals', () => {
         }));
         clientWrapperStub.getContactByEmail.returns(Promise.resolve({
           properties: {
-            email: expectedEmail,
             lastname: { value: expectedLastname },
             age: { value: 25 },
             createdate: { value: 1579245170 },
+            lastmodifieddate: { value: 1579245170 },
           },
         }));
       });
@@ -159,6 +163,8 @@ describe('ContactFieldEquals', () => {
           properties: {
             email: { value: expectedEmail },
             lastname: { value: expectedLastname },
+            createdate: { value: new Date().valueOf() },
+            lastmodifieddate: { value: new Date().valueOf() },
           },
         }));
       });

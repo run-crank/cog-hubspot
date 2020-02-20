@@ -1,7 +1,7 @@
 /*tslint:disable:no-else-after-return*/
 
-import { BaseStep, Field, StepInterface } from '../../core/base-step';
-import { Step, FieldDefinition, StepDefinition } from '../../proto/cog_pb';
+import { BaseStep, Field, StepInterface, ExpectedRecord } from '../../core/base-step';
+import { Step, FieldDefinition, StepDefinition, RecordDefinition, StepRecord } from '../../proto/cog_pb';
 
 export class CreateOrUpdateContactStep extends BaseStep implements StepInterface {
 
@@ -13,6 +13,25 @@ export class CreateOrUpdateContactStep extends BaseStep implements StepInterface
     field: 'contact',
     type: FieldDefinition.Type.MAP,
     description: 'A map of field names to field values',
+  }];
+
+  protected expectedRecords: ExpectedRecord[] = [{
+    id: 'contact',
+    type: RecordDefinition.Type.KEYVALUE,
+    fields: [{
+      field: 'hs_object_id',
+      type: FieldDefinition.Type.STRING,
+      description: 'The contact\'s ID',
+    }, {
+      field: 'createdate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Create Date',
+    }, {
+      field: 'lastmodifieddate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Last Modified Date',
+    }],
+    dynamicFields: true,
   }];
 
   async executeStep(step: Step) {
@@ -29,12 +48,13 @@ export class CreateOrUpdateContactStep extends BaseStep implements StepInterface
           value: stepData.contact[key],
         });
       });
+
       const data = await this.client.createOrUpdateContact(email, contact);
+      const createdContact = await this.client.getContactByEmail(email);
+      const record = this.createRecord(createdContact);
 
       if (data) {
-        return this.pass('Successfully created or updated HubSpot contact %s', [
-          email,
-        ]);
+        return this.pass('Successfully created or updated HubSpot contact %s', [email], [record]);
       } else {
         return this.fail('Unable to create or update HubSpot contact');
       }
@@ -45,6 +65,14 @@ export class CreateOrUpdateContactStep extends BaseStep implements StepInterface
     }
   }
 
+  public createRecord(contact): StepRecord {
+    const obj = {};
+    Object.keys(contact.properties).forEach(key => obj[key] = contact.properties[key].value);
+    obj['createdate'] = this.client.toDate(obj['createdate']);
+    obj['lastmodifieddate'] = this.client.toDate(obj['lastmodifieddate']);
+    const record = this.keyValue('contact', 'Created Contact', obj);
+    return record;
+  }
 }
 
 export { CreateOrUpdateContactStep as Step };

@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as chai from 'chai';
 import { default as sinon } from 'ts-sinon';
@@ -19,6 +20,8 @@ describe('ContactDeleteStep', () => {
     protoStep = new ProtoStep();
     clientWrapperStub = sinon.stub();
     clientWrapperStub.deleteContactByEmail = sinon.stub();
+    clientWrapperStub.toDate = sinon.stub();
+    clientWrapperStub.toDate.returns(new Date().toISOString());
     stepUnderTest = new Step(clientWrapperStub);
   });
 
@@ -62,8 +65,16 @@ describe('ContactDeleteStep', () => {
           email: 'hubspot@test.com',
         }));
         clientWrapperStub.deleteContactByEmail.returns(Promise.resolve({
-          deleted: true,
-          reason: 'OK',
+          result: {
+            deleted: true,
+            reason: 'OK',
+          },
+          contact: {
+            properties: {
+              createdate: { value: new Date().valueOf() },
+              lastmodifieddate: { value: new Date().valueOf() },
+            },
+          },
         }));
       });
 
@@ -79,8 +90,16 @@ describe('ContactDeleteStep', () => {
           email: 'hubspot@test.com',
         }));
         clientWrapperStub.deleteContactByEmail.returns(Promise.resolve({
-          deleted: false,
-          reason: 'ERROR',
+          result: {
+            deleted: false,
+            reason: 'OK',
+          },
+          contact: {
+            properties: {
+              createdate: { value: new Date().valueOf() },
+              lastmodifieddate: { value: new Date().valueOf() },
+            },
+          },
         }));
       });
 

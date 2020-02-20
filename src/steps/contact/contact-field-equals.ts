@@ -1,8 +1,9 @@
 /*tslint:disable:no-else-after-return*/
 
-import { BaseStep, Field, StepInterface } from '../../core/base-step';
-import { Step, FieldDefinition, StepDefinition } from '../../proto/cog_pb';
+import { BaseStep, Field, StepInterface, ExpectedRecord } from '../../core/base-step';
+import { Step, FieldDefinition, StepDefinition, RecordDefinition, StepRecord } from '../../proto/cog_pb';
 import * as util from '@run-crank/utilities';
+import * as moment from 'moment';
 import { baseOperators } from '../../client/contants/operators';
 
 export class ContactFieldEquals extends BaseStep implements StepInterface {
@@ -31,6 +32,29 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     description: 'Expected field value',
   }];
 
+  protected expectedRecords: ExpectedRecord[] = [{
+    id: 'contact',
+    type: RecordDefinition.Type.KEYVALUE,
+    fields: [{
+      field: 'hs_object_id',
+      type: FieldDefinition.Type.STRING,
+      description: 'The Contact\'s ID',
+    }, {
+      field: 'email',
+      type: FieldDefinition.Type.EMAIL,
+      description: 'The Contact\'s Email',
+    }, {
+      field: 'createdate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Create Date',
+    }, {
+      field: 'lastmodifieddate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Last Modified Date',
+    }],
+    dynamicFields: true,
+  }];
+
   async executeStep(step: Step) {
     const stepData: any = step.getData() ? step.getData().toJavaScript() : {};
     const expectation = stepData.expectation;
@@ -50,17 +74,12 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
       const value = contact.properties[field].value;
       const actual = this.client.isDate(value) ? this.client.toDate(value) : value;
 
+      const record = this.createRecord(contact);
       if (this.compare(operator, actual, expectation)) {
-        return this.pass(this.operatorSuccessMessages[operator], [
-          field,
-          expectation,
-        ]);
+        return this.pass(this.operatorSuccessMessages[operator], [field, expectation], [record]);
       } else {
-        return this.fail(this.operatorFailMessages[operator], [
-          field,
-          expectation,
-          actual,
-        ]);
+        // tslint:disable-next-line:max-line-length
+        return this.fail(this.operatorFailMessages[operator], [field, expectation, actual], [record]);
       }
     } catch (e) {
       if (e instanceof util.UnknownOperatorError) {
@@ -73,6 +92,14 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     }
   }
 
+  public createRecord(contact): StepRecord {
+    const obj = {};
+    Object.keys(contact.properties).forEach(key => obj[key] = contact.properties[key].value);
+    obj['createdate'] = this.client.toDate(obj['createdate']);
+    obj['lastmodifieddate'] = this.client.toDate(obj['lastmodifieddate']);
+    const record = this.keyValue('contact', 'Checked Contact', obj);
+    return record;
+  }
 }
 
 export { ContactFieldEquals as Step };

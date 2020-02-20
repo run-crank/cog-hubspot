@@ -20,6 +20,15 @@ describe('EnrollContactToWorkflowStep', () => {
     clientWrapperStub = sinon.stub();
     clientWrapperStub.findWorkflowByName = sinon.stub();
     clientWrapperStub.enrollContactToWorkflow = sinon.stub();
+    clientWrapperStub.getContactByEmail = sinon.stub();
+    clientWrapperStub.getContactByEmail.returns(Promise.resolve({
+      properties: {
+        createdate: { value: new Date().valueOf() },
+        lastmodifieddate: { value: new Date().valueOf() },
+      },
+    }));
+    clientWrapperStub.toDate = sinon.stub();
+    clientWrapperStub.toDate.returns(new Date().toISOString());
     stepUnderTest = new Step(clientWrapperStub);
   });
 
@@ -81,7 +90,9 @@ describe('EnrollContactToWorkflowStep', () => {
         clientWrapperStub.findWorkflowByName.returns(Promise.resolve([
           {
             id: 1,
-            workflow: 'Email Workflow',
+            name: workflow,
+            type: 'Default',
+            description: 'Default',
           },
         ]));
         clientWrapperStub.enrollContactToWorkflow.returns(Promise.resolve());
