@@ -85,8 +85,7 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
         const workflows = await this.client.findWorkflowByName(workflow);
 
         if (workflows.length > 1) {
-          const headers = {};
-          Object.keys(workflows[0]).forEach(key => headers[key] = key);
+          const headers = { name: 'Name', id: 'Id', type: 'Type', description: 'Description' };
 
           const table = workflows.map((workflow) => {
             return {
