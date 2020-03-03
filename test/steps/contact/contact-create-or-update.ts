@@ -19,6 +19,7 @@ describe('CreateOrUpdateContactStep', () => {
     protoStep = new ProtoStep();
     clientWrapperStub = sinon.stub();
     clientWrapperStub.createOrUpdateContact = sinon.stub();
+    clientWrapperStub.getContactByEmail = sinon.stub();
     clientWrapperStub.toDate = sinon.stub();
     clientWrapperStub.toDate.returns(new Date().toISOString());
     stepUnderTest = new Step(clientWrapperStub);
@@ -76,6 +77,12 @@ describe('CreateOrUpdateContactStep', () => {
           contact:  { email: 'hubspot@test.com', properties: { createdate: new Date().valueOf(), lastmodifieddate: new Date().valueOf() } },
         }));
         clientWrapperStub.createOrUpdateContact.returns(Promise.resolve({}));
+        clientWrapperStub.getContactByEmail.returns(Promise.resolve({
+          properties: {
+            createdate: 'someDate',
+            lastmodifieddate: 'someDate',
+          },
+        }));
       });
 
       it('should respond with pass', async () => {
@@ -96,6 +103,12 @@ describe('CreateOrUpdateContactStep', () => {
           },
         }));
         clientWrapperStub.createOrUpdateContact.returns(Promise.resolve(undefined));
+        clientWrapperStub.getContactByEmail.returns(Promise.resolve({
+          properties: {
+            createdate: 'someDate',
+            lastmodifieddate: 'someDate',
+          },
+        }));
       });
 
       it('should respond with fail', async () => {
