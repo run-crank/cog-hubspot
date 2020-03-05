@@ -5,6 +5,7 @@ import { Step, FieldDefinition, StepDefinition, RecordDefinition, StepRecord } f
 import * as util from '@run-crank/utilities';
 import * as moment from 'moment';
 import { baseOperators } from '../../client/contants/operators';
+const DEFAULT_FIELDS: string[] = [];
 
 export class ContactFieldEquals extends BaseStep implements StepInterface {
 
@@ -65,6 +66,8 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     try {
       const contact = await this.client.getContactByEmail(email);
 
+      console.log(contact);
+
       if (!contact.properties[field]) {
         return this.error("Couldn't check field %s on HubSpot contact: field doesn't exist.", [
           field,
@@ -88,7 +91,8 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
       if (e instanceof util.InvalidOperandError) {
         return this.error('There was an error checking the contact field: %s', [e.message]);
       }
-      return this.error('There was an error checking the contact field: %s', [e.message]);
+
+      return this.error('There was an error checking the contact field: %s', [e.toString()]);
     }
   }
 

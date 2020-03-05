@@ -21,7 +21,7 @@ export class ContactAwareMixin {
       this.client.contacts.createOrUpdate(email, contact).then((result) => {
         resolve(result);
       },                                                       (error) => {
-        reject(error.message);
+        reject(error);
       });
     });
   }
