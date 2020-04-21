@@ -1,6 +1,6 @@
 {
   "name": "cog-hubspot",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "HubSpot Cog for use with Crank",
   "license": "MIT",
   "cog": {
