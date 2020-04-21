@@ -37,7 +37,7 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     type: RecordDefinition.Type.KEYVALUE,
     fields: [{
       field: 'hs_object_id',
-      type: FieldDefinition.Type.STRING,
+      type: FieldDefinition.Type.NUMERIC,
       description: 'The Contact\'s ID',
     }, {
       field: 'email',

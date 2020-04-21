@@ -25,7 +25,7 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
     type: RecordDefinition.Type.KEYVALUE,
     fields: [{
       field: 'id',
-      type: FieldDefinition.Type.STRING,
+      type: FieldDefinition.Type.NUMERIC,
       description: 'The Contact\'s ID',
     }, {
       field: 'email',
@@ -61,28 +61,7 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
       type: FieldDefinition.Type.STRING,
       description: 'The Workflow\'s Description',
     }],
-    dynamicFields: true,
-  }, {
-    id: 'matchedWorkflows',
-    type: RecordDefinition.Type.TABLE,
-    fields: [{
-      field: 'name',
-      type: FieldDefinition.Type.STRING,
-      description: 'The Workflow\'s Name',
-    }, {
-      field: 'id',
-      type: FieldDefinition.Type.NUMERIC,
-      description: 'The Workflow\'s ID',
-    }, {
-      field: 'type',
-      type: FieldDefinition.Type.STRING,
-      description: 'The Workflow\'s Type',
-    }, {
-      field: 'description',
-      type: FieldDefinition.Type.STRING,
-      description: 'The Workflow\'s Description',
-    }],
-    dynamicFields: true,
+    dynamicFields: false,
   }];
 
   async executeStep(step: Step) {

@@ -20,7 +20,7 @@ export class CreateOrUpdateContactStep extends BaseStep implements StepInterface
     type: RecordDefinition.Type.KEYVALUE,
     fields: [{
       field: 'hs_object_id',
-      type: FieldDefinition.Type.STRING,
+      type: FieldDefinition.Type.NUMERIC,
       description: 'The contact\'s ID',
     }, {
       field: 'createdate',

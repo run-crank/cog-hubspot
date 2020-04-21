@@ -40,26 +40,22 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
       type: FieldDefinition.Type.STRING,
       description: 'The Workflow\'s Description',
     }],
-    dynamicFields: true,
+    dynamicFields: false,
   }, {
-    id: 'matchedWorkflows',
-    type: RecordDefinition.Type.TABLE,
+    id: 'contact',
+    type: RecordDefinition.Type.KEYVALUE,
     fields: [{
-      field: 'name',
-      type: FieldDefinition.Type.STRING,
-      description: 'The Workflow\'s Name',
-    }, {
-      field: 'id',
+      field: 'hs_object_id',
       type: FieldDefinition.Type.NUMERIC,
-      description: 'The Workflow\'s ID',
+      description: 'The contact\'s ID',
     }, {
-      field: 'type',
-      type: FieldDefinition.Type.STRING,
-      description: 'The Workflow\'s Type',
+      field: 'createdate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Create Date',
     }, {
-      field: 'description',
-      type: FieldDefinition.Type.STRING,
-      description: 'The Workflow\'s Description',
+      field: 'lastmodifieddate',
+      type: FieldDefinition.Type.DATETIME,
+      description: 'The Contact\'s Last Modified Date',
     }],
     dynamicFields: true,
   }];
