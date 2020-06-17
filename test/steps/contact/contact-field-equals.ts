@@ -31,7 +31,7 @@ describe('ContactFieldEquals', () => {
       const stepDef: StepDefinition = stepUnderTest.getDefinition();
       expect(stepDef.getStepId()).to.equal('ContactFieldEquals');
       expect(stepDef.getName()).to.equal('Check a field on a HubSpot Contact');
-      expect(stepDef.getExpression()).to.equal('the (?<field>[a-zA-Z0-9_-]+) field on hubspot contact (?<email>.+) should (?<operator>be less than|be greater than|be|contain|not be|not contain) (?<expectation>.+)');
+      expect(stepDef.getExpression()).to.equal('the (?<field>[a-zA-Z0-9_-]+) field on hubspot contact (?<email>.+) should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain) ?(?<expectation>.+)?');
       expect(stepDef.getType()).to.equal(StepDefinition.Type.VALIDATION);
     });
 
@@ -54,7 +54,7 @@ describe('ContactFieldEquals', () => {
       expect(fields[2].type).to.equal(FieldDefinition.Type.STRING);
 
       expect(fields[3].key).to.equal('expectation');
-      expect(fields[3].optionality).to.equal(FieldDefinition.Optionality.REQUIRED);
+      expect(fields[3].optionality).to.equal(FieldDefinition.Optionality.OPTIONAL);
       expect(fields[3].type).to.equal(FieldDefinition.Type.ANYSCALAR);
     });
   });
