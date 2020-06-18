@@ -15,7 +15,7 @@ steps:
       email: '{{test.email}}'
       lastname: '{{test.lastname}}'
       company: '{{test.company}}'
-- step: Then the email field on HubSpot Contact {{test.email}} should be {{test.email}}
-- step: And the company field on HubSpot Contact {{test.email}} should be {{test.company}}
+- step: Then the email field on HubSpot Contact {{test.email}} should be set
+- step: And the company field on HubSpot Contact {{test.email}} should be one of {{test.company}}
 - step: And the createdate field on HubSpot Contact {{test.email}} should be greater than 2019-01-01
 - step: Finally, delete the {{test.email}} HubSpot Contact
