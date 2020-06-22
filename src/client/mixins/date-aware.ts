@@ -18,4 +18,8 @@ export class DateAwareMixin {
     const result = new Date(+epoch);
     return result.toISOString();
   }
+
+  public toEpoch(date: Date): string {
+    return date.valueOf().toString();
+  }
 }
