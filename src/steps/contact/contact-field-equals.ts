@@ -66,13 +66,11 @@ export class ContactFieldEquals extends BaseStep implements StepInterface {
     try {
       const contact = await this.client.getContactByEmail(email);
 
-      if (!contact.properties[field]) {
-        return this.error("Couldn't check field %s on HubSpot contact: field doesn't exist.", [
-          field,
-        ]);
-      }
+      // Since null/empty fields are not being returned by the API, default to null
+      // so that checks that are expected to fail will fail
+      const value = contact.properties.hasOwnProperty(field)
+        ? contact.properties[field].value : null;
 
-      const value = contact.properties[field].value;
       const actual = this.client.isDate(value) ? this.client.toDate(value) : value;
 
       const record = this.createRecord(contact);
