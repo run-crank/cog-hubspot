@@ -69,7 +69,7 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
       const contact = await this.client.getContactByEmail(email);
 
       if (!contact) {
-        return this.error(
+        return this.fail(
           'Can\'t enroll %s into %s: contact not found.',
           [email, stepData.workflow],
         );
@@ -92,7 +92,7 @@ export class EnrollContactToWorkflowStep extends BaseStep implements StepInterfa
             };
           });
           const workflowRecords = this.table('matchedWorkflows', 'Matched Workflows', headers, table);
-          return this.error(
+          return this.fail(
             'Can\'t enroll %s into %s: found more than one workflow with that name.',
             [email, workflow],
             [workflowRecords, contactRecord],
