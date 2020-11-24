@@ -73,7 +73,7 @@ export class ContactEnrolledToWorkflowStep extends BaseStep implements StepInter
       const contact = await this.client.getContactByEmail(email);
 
       if (!contact) {
-        return this.error(
+        return this.fail(
           'Contact %s was not found',
           [email],
         );
