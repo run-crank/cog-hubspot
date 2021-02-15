@@ -1,0 +1,23 @@
+scenario: HubSpot Contact Workflow with Operators
+description: >
+  This scenario proves that the smooth operators are working when validating fields of a Contact enrolled into Workflow.
+  is working as expected.
+
+steps:
+- step: Given I create or update a hubspot contact
+  data:
+    contact:
+        email: hsworkflow@thisisjust.atomatest.com
+        firstName: Roses
+        lastName: Lim
+        company: HS Corp
+        closedate: 1610109481000
+- step: When I enroll the hsworkflow@thisisjust.atomatest.com hubspot contact into workflow MQL and Email
+- step: And I enroll the hsworkflow@thisisjust.atomatest.com hubspot contact into workflow Test
+- step: Then the hsworkflow@thisisjust.atomatest.com hubspot contact should currently be enrolled in workflow MQL and Email
+- step: And the hsworkflow@thisisjust.atomatest.com hubspot contact should currently be enrolled in workflow Test
+- step: And the lifecyclestage field on hubspot contact hsworkflow@thisisjust.atomatest.com should contain marketingqualified
+- step: And the lifecyclestage field on hubspot contact hsworkflow@thisisjust.atomatest.com should not contain sub
+- step: And the firstname field on hubspot contact hsworkflow@thisisjust.atomatest.com should not be Lim
+- step: And the closedate field on hubspot contact hsworkflow@thisisjust.atomatest.com should be greater than 1578487081000
+- step: Finally, delete the hsworkflow@thisisjust.atomatest.com hubspot contact
